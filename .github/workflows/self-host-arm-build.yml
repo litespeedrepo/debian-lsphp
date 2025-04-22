@@ -33,6 +33,7 @@ on:
           - '"noble"'
           - '"jammy"'
           - '"focal"'
+          - '"bionic"'
           - '"bookworm"'
           - '"bullseye"'
           - '"buster"'
