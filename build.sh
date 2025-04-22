@@ -12,8 +12,6 @@ PHP_V=84
 product=$1
 dists=$2
 input_archs=$3
-#build_flag=$4
-#release_flag=$5
 
 if [ -z "${version}" ]; then
     version="$(grep ${product}= VERSION.txt | awk -F '=' '{print $2}')"
