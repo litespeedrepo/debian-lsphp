@@ -1,0 +1,64 @@
+#!/usr/bin/make -f
+
+# See debhelper(7) (uncomment to enable)
+# output every command that modifies files on the build system.
+export DH_VERBOSE = 1
+
+
+# see FEATURE AREAS in dpkg-buildflags(1)
+#export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+# see ENVIRONMENT in dpkg-buildflags(1)
+# package maintainers to append CFLAGS
+#export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
+# package maintainers to append LDFLAGS
+#export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
+PACKAGE_NAME      := apcu
+PHP_VERSION       := 83
+PHP_DOT_VERSION   := 8.3
+PHP_DATE          := 20230831
+PHP_DIR           := /usr/local/lsws/lsphp$(PHP_VERSION)
+BUILD_ROOT        := $(shell pwd)
+
+%:
+				dh $@
+
+override_dh_auto_configure:
+				$(PHP_DIR)/bin/phpize
+				dh_auto_configure -- \
+				--with-php-config=$(PHP_DIR)/bin/php-config$(PHP_DOT_VERSION)
+
+				touch configure-stamp
+
+override_dh_auto_test:
+override_dh_usrlocal:
+
+override_dh_auto_install:
+				# INI File
+				mkdir -p debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/etc/php/$(PHP_DOT_VERSION)/mods-available/
+				cp debian/$(PACKAGE_NAME).ini debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/etc/php/$(PHP_DOT_VERSION)/mods-available/40-$(PACKAGE_NAME).ini
+
+				# PHP Header File
+				mkdir -p debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/
+				cp -pr apc.h debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/
+				cp -pr apc_api.h debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/
+				cp -pr apc_arginfo.h debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/
+				cp -pr apc_cache.h debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/
+				#cp -pr apc_cache_api.h debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/
+				cp -pr apc_globals.h debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/
+				cp -pr apc_iterator.h debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/
+				cp -pr apc_lock.h debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/
+				#cp -pr apc_lock_api.h debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/
+				#cp -pr apc_pool.h debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/
+				#cp -pr apc_pool_api.h debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/
+				cp -pr apc_serializer.h debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/
+				cp -pr apc_sma.h debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/
+				#cp -pr apc_sma_api.h debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/
+				cp -pr apc_stack.h debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/
+				cp -pr php_apc.h debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/
+
+				# Module
+				mkdir -p debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/lib/php/$(PHP_DATE)/
+				cp -pr modules/$(PACKAGE_NAME).so debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/lib/php/$(PHP_DATE)/
+				chmod a+x debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/lib/php/$(PHP_DATE)/$(PACKAGE_NAME).so

@@ -1,0 +1,170 @@
+#!/usr/bin/make -f
+
+# See debhelper(7) (uncomment to enable)
+# output every command that modifies files on the build system.
+export DH_VERBOSE = 1
+export PHP_PEAR_SYSCONF_DIR=/etc/pear
+
+
+# see FEATURE AREAS in dpkg-buildflags(1)
+#export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+# see ENVIRONMENT in dpkg-buildflags(1)
+# package maintainers to append CFLAGS
+#export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
+# package maintainers to append LDFLAGS
+#export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
+PACKAGE_NAME      := pear
+PHP_VERSION       := 83
+PHP_DOT_VERSION   := 8.3
+PHP_DATE          := 20230831
+PHP_DIR           := /usr/local/lsws/lsphp$(PHP_VERSION)
+BUILD_ROOT        := $(shell pwd)
+
+%:
+	dh $@
+
+override_dh_usrlocal:
+
+override_dh_auto_install:
+	# Mimics phppear buildsystem:
+	# - Removing no-op commands
+	mkdir -p debian/lsphp$(PHP_VERSION)-pear
+	# PEAR
+	$(PHP_DIR)/bin/php \
+	    -d include_path=submodules/Archive_Tar:submodules/Console_Getopt:submodules/Structures_Graph:submodules/XML_Util \
+	    ./scripts/pearcmd.php \
+	    -c debian/pearrc \
+	    -d download_dir=/tmp \
+	    -d php_bin=$(PHP_DIR)/bin/php \
+	    -d bin_dir=$(PHP_DIR)/bin \
+	    -d php_dir=$(PHP_DIR)/share/php \
+	    -d data_dir=$(PHP_DIR)/share/php/data \
+	    -d doc_dir="$(PHP_DIR)/share/doc/lsphp$(PHP_VERSION)-pear" \
+	    -d test_dir=$(PHP_DIR)/share/php/tests \
+	    install \
+	    --offline \
+	    --nodeps \
+	    -P "debian/lsphp$(PHP_VERSION)-pear" \
+	     ./package2.xml
+	# PEAR manpages
+	$(PHP_DIR)/bin/php \
+	    -d include_path=submodules/Archive_Tar:submodules/Console_Getopt:submodules/Structures_Graph:submodules/XML_Util \
+	    ./scripts/pearcmd.php \
+	    -c debian/pearrc \
+	    -d download_dir=/tmp \
+	    -d php_bin=$(PHP_DIR)/bin/php \
+	    -d bin_dir=$(PHP_DIR)/bin \
+	    -d php_dir=$(PHP_DIR)/share/php \
+	    -d data_dir=$(PHP_DIR)/share/php/data \
+	    -d doc_dir="$(PHP_DIR)/share/doc/lsphp$(PHP_VERSION)-pear" \
+	    -d test_dir=$(PHP_DIR)/share/php/tests \
+	    install \
+	    --offline \
+	    --nodeps \
+	    -P "debian/lsphp$(PHP_VERSION)-pear" \
+	     ./package-manpages.xml
+	# Archive_Tar
+	$(PHP_DIR)/bin/php \
+	    -d include_path=submodules/Archive_Tar:submodules/Console_Getopt:submodules/Structures_Graph:submodules/XML_Util \
+	    ./scripts/pearcmd.php \
+	    -c debian/pearrc \
+	    -d download_dir=/tmp \
+	    -d php_bin=$(PHP_DIR)/bin/php \
+	    -d bin_dir=$(PHP_DIR)/bin \
+	    -d php_dir=$(PHP_DIR)/share/php \
+	    -d data_dir=$(PHP_DIR)/share/php/data \
+	    -d doc_dir="$(PHP_DIR)/share/doc/lsphp$(PHP_VERSION)-pear" \
+	    -d test_dir=$(PHP_DIR)/share/php/tests \
+	    install \
+	    --offline \
+	    --nodeps \
+	    -P "debian/lsphp$(PHP_VERSION)-pear" \
+	     submodules/Archive_Tar/package.xml
+	# Console_Getopt
+	$(PHP_DIR)/bin/php \
+	    -d include_path=submodules/Archive_Tar:submodules/Console_Getopt:submodules/Structures_Graph:submodules/XML_Util \
+	    ./scripts/pearcmd.php \
+	    -c debian/pearrc \
+	    -d download_dir=/tmp \
+	    -d php_bin=$(PHP_DIR)/bin/php \
+	    -d bin_dir=$(PHP_DIR)/bin \
+	    -d php_dir=$(PHP_DIR)/share/php \
+	    -d data_dir=$(PHP_DIR)/share/php/data \
+	    -d doc_dir="$(PHP_DIR)/share/doc/lsphp$(PHP_VERSION)-pear" \
+	    -d test_dir=$(PHP_DIR)/share/php/tests \
+	    install \
+	    --offline \
+	    --nodeps \
+	    -P "debian/lsphp$(PHP_VERSION)-pear" \
+	     submodules/Console_Getopt/package.xml
+	# Structures_Graph
+	$(PHP_DIR)/bin/php \
+	    -d include_path=submodules/Archive_Tar:submodules/Console_Getopt:submodules/Structures_Graph:submodules/XML_Util \
+	    ./scripts/pearcmd.php \
+	    -c debian/pearrc \
+	    -d download_dir=/tmp \
+	    -d php_bin=$(PHP_DIR)/bin/php \
+	    -d bin_dir=$(PHP_DIR)/bin \
+	    -d php_dir=$(PHP_DIR)/share/php \
+	    -d data_dir=$(PHP_DIR)/share/php/data \
+	    -d doc_dir="$(PHP_DIR)/share/doc/lsphp$(PHP_VERSION)-pear" \
+	    -d test_dir=$(PHP_DIR)/share/php/tests \
+	    install \
+	    --offline \
+	    --nodeps \
+	    -P "debian/lsphp$(PHP_VERSION)-pear" \
+	     submodules/Structures_Graph/package.xml
+	# XML_Util
+	$(PHP_DIR)/bin/php \
+	    -d include_path=submodules/Archive_Tar:submodules/Console_Getopt:submodules/Structures_Graph:submodules/XML_Util \
+	    ./scripts/pearcmd.php \
+	    -c debian/pearrc \
+	    -d download_dir=/tmp \
+	    -d php_bin=$(PHP_DIR)/bin/php \
+	    -d bin_dir=$(PHP_DIR)/bin \
+	    -d php_dir=$(PHP_DIR)/share/php \
+	    -d data_dir=$(PHP_DIR)/share/php/data \
+	    -d doc_dir="$(PHP_DIR)/share/doc/lsphp$(PHP_VERSION)-pear" \
+	    -d test_dir=$(PHP_DIR)/share/php/tests \
+	    install \
+	    --offline \
+	    --nodeps \
+	    -P "debian/lsphp$(PHP_VERSION)-pear" \
+	     submodules/XML_Util/package.xml
+
+	# remove unwanted files
+	rmdir --ignore-fail-on-non-empty debian/lsphp$(PHP_VERSION)-pear$(PHP_DIR)/share/php/.registry/.channel.pecl.php.net
+	rm -rf debian/lsphp$(PHP_VERSION)-pear$(PHP_DIR)/share/php/.registry/.channel.doc.php.net
+	rm -rf debian/lsphp$(PHP_VERSION)-pear$(PHP_DIR)/share/php/.registry/.channel.__uri
+
+	# workaround pear install which will copy docs file into a subdir
+	# (skipped)
+	# delete COPYING and LICENSE files and prune empty directories
+	find debian/lsphp$(PHP_VERSION)-pear$(PHP_DIR)/share/doc -type f -name LICENSE -delete
+	find debian/lsphp$(PHP_VERSION)-pear$(PHP_DIR)/share/doc -type d -empty -delete
+	# Remove tests files
+	rm -rf debian/lsphp$(PHP_VERSION)-pear$(PHP_DIR)/share/php/tests
+	# add package.xml and changelog to doc dir
+	cp package2.xml debian/lsphp$(PHP_VERSION)-pear$(PHP_DIR)/share/doc/lsphp$(PHP_VERSION)-pear/PEAR_package2.xml
+	cp submodules/Archive_Tar/package.xml debian/lsphp$(PHP_VERSION)-pear$(PHP_DIR)/share/doc/lsphp$(PHP_VERSION)-pear/Archive_Tar_package.xml
+	cp submodules/Console_Getopt/package.xml debian/lsphp$(PHP_VERSION)-pear$(PHP_DIR)/share/doc/lsphp$(PHP_VERSION)-pear/Console_Getopt_package.xml
+	cp submodules/Structures_Graph/package.xml debian/lsphp$(PHP_VERSION)-pear$(PHP_DIR)/share/doc/lsphp$(PHP_VERSION)-pear/Structures_Graph_package.xml
+	cp submodules/XML_Util/package.xml debian/lsphp$(PHP_VERSION)-pear$(PHP_DIR)/share/doc/lsphp$(PHP_VERSION)-pear/XML_Util_package.xml
+	# TODO $(PHP_DIR)/share/doc/lsphp$(PHP_VERSION)-pear/changelog
+	# End of: Mimics phppear buildsystem
+
+	# Move config
+	sed -i -re "s#('PEAR_CONFIG_SYSCONFDIR', PHP_SYSCONFDIR)#\1 . '/pear'#" $(CURDIR)/debian/lsphp$(PHP_VERSION)-pear$(PHP_DIR)/share/php/PEAR/Config.php
+
+	# Remove db files
+	rm debian/lsphp$(PHP_VERSION)-pear$(PHP_DIR)/share/php/.depdb
+	rm debian/lsphp$(PHP_VERSION)-pear$(PHP_DIR)/share/php/.filemap
+
+	# Clean up
+	rm debian/lsphp$(PHP_VERSION)-pear$(PHP_DIR)/share/doc/lsphp$(PHP_VERSION)-pear/PEAR/INSTALL
+
+override_dh_link:
+	# This mimic dh_phppear
+	dh_link

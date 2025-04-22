@@ -1,0 +1,520 @@
+#!/usr/bin/make -f
+
+# Uncomment this to turn on verbose mode. 
+export DH_VERBOSE=1
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+# Enable this for debugging the sed scripts
+#SED=$(CURDIR)/debian/sedsed
+SED := sed
+
+# enable dpkg build flags
+DPKG_EXPORT_BUILDFLAGS = 1
+include /usr/share/dpkg/buildflags.mk
+include /usr/share/dpkg/architecture.mk
+include /usr/share/dpkg/pkg-info.mk
+export DEB_HOST_MULTIARCH
+
+PHP_SOURCE_VERSION   := $(DEB_VERSION)
+PHP_UPSTREAM_VERSION := $(DEB_VERSION_UPSTREAM)
+PHP_DEBIAN_REVISION  := $(shell echo $(PHP_SOURCE_VERSION) | $(SED) -e 's/.*-//')
+PHP_DFSG_VERSION     := $(shell echo $(PHP_UPSTREAM_VERSION) | $(SED) -e 's/+.*//')
+PHP_MAJOR_VERSION    := $(shell echo $(PHP_DFSG_VERSION) | awk -F. '{print $$1}')
+PHP_MINOR_VERSION    := $(shell echo $(PHP_DFSG_VERSION) | awk -F. '{print $$2}')
+PHP_RELEASE_VERSION  := $(shell echo $(PHP_DFSG_VERSION) | awk -F. '{print $$3}')
+PHP_NAME_VERSION     := $(PHP_MAJOR_VERSION).$(PHP_MINOR_VERSION)
+PHP_ZEND_VERSION     := $(shell $(SED) -ne 's/\#define ZEND_MODULE_API_NO //p' Zend/zend_modules.h)
+
+REAL_TARGETS         :=  litespeed
+TARGETS              := $(REAL_TARGETS)
+CONFIGURE_TARGETS    := $(addprefix configure-, $(addsuffix -stamp, $(TARGETS)))
+BUILD_TARGETS        := $(addprefix build-, $(addsuffix -stamp, $(TARGETS)))
+INSTALL_TARGETS      := $(addprefix install-, $(addsuffix -stamp, $(TARGETS)))
+CLI_INSTALL_DEPEND   := $(filter-out install-cli-stamp,$(INSTALL_TARGETS))
+
+# Special package names
+LSPHP	     := lsphp83
+PHP_COMMON   := lsphp83-common
+PHP_DEV      := lsphp83-dev
+PHP_CLI      := lsphp83-cli
+PHP_DBG      := lsphp83-dbg
+
+PHP_MODULES_SOURCE = lsphp83-modules-source
+
+LSPHP_INST_DIR := /usr/local/lsws/lsphp83
+
+# Generic commands
+
+SED_VARIABLES := \
+	$(SED) -e "s,@sapi@,$${sapi},g"				|\
+	$(SED) -e "s,@package@,$${package},g"			|\
+	$(SED) -e "s,@modules@,$${modules},g"			|\
+	$(SED) -e "s,@module@,$${module},g"			|\
+	$(SED) -e "s,@extdir@,$${extdir},g"			|\
+	$(SED) -e "s,@priority@,$${priority},g"			|\
+	$(SED) -e "s,php@PHP_VERSION@,lsphp83,g"	|\
+	$(SED) -e "s,@PHP_VERSION@,8.3,g"	|\
+	$(SED) -e "s,@PHP_MAJOR@,$(PHP_MAJOR_VERSION),g"	|\
+	$(SED) -e "s,@PHP_MINOR@,$(PHP_MINOR_VERSION),g"	|\
+	$(SED) -e "s,@PHP_RELEASE@,$(PHP_RELEASE_VERSION),g"	|\
+	$(SED) -e "s,@PHP_API@,$(PHP_ZEND_VERSION),g"
+
+SED_REPLACEMENT := $(SED) -e "/\#EXTRA\#/ r debian/$${versionless}.$${tmpl}.extra" | $(SED_VARIABLES) | $(SED) -e '/\#EXTRA\#/ d'
+
+SAPI_PACKAGE := \
+	case $${sapi} in \
+	litespeed)       package=lsphp83; source=lsphp83 ;; \
+	cli)             package=lsphp83-cli; source=lsphp83-cli ;; \
+	  *)	  ;; \
+	esac; \
+	versionless=$$(echo $${package} | $(SED) -e 's/lsphp83/php/g');
+
+MODULE_PACKAGE := \
+	package=lsphp83-$${module}; \
+	versionless=$$(echo $${package} | $(SED) -e 's/lsphp83/php/g');
+
+ifeq (linux,$(DEB_HOST_ARCH_OS))
+  CONFIGURE_SYSTEMD := --with-fpm-systemd
+  DH_SYSTEMD        := --with systemd
+else
+  CONFIGURE_SYSTEMD := --without-fpm-systemd
+  DH_SYSTEMD        :=
+endif
+
+ifeq ($(DEB_HOST_ARCH),$(filter $(DEB_HOST_ARCH),amd64 armel armhf i386 ia64 powerpc))
+#  CONFIGURE_DTRACE_ARGS := --enable-dtrace
+   CONFIGURE_DTRACE_ARGS := --disable-dtrace
+else
+  CONFIGURE_DTRACE_ARGS := --disable-dtrace
+endif
+
+# specify some options to our patch system
+QUILT_DIFF_OPTS := -p
+QUILT_NO_DIFF_TIMESTAMPS := 1 
+export QUILT_DIFF_OPTS QUILT_NO_DIFF_TIMESTAMPS
+
+PROG_SENDMAIL := /usr/sbin/sendmail
+ifeq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+  CFLAGS += -O2
+else
+  CFLAGS += -O0
+endif
+CFLAGS += -Wall -fsigned-char -fno-strict-aliasing -fno-lto 
+CFLAGS += $(shell getconf LFS_CFLAGS)
+
+# Enable IEEE-conformant floating point math on alphas (not the default)
+ifeq (alpha-linux-gnu,$(DEB_HOST_GNU_TYPE))
+  CFLAGS += -mieee
+endif
+
+# Enable producing of debugging information
+CFLAGS += -g
+
+DEB_LIBDIR_NAME = i386-linux-gnu
+
+# some other helpful (for readability at least) shorthand variables
+PHPIZE_BUILDDIR := debian/$(PHP_DEV)/$(LSPHP_INST_DIR)/lib/php/build
+
+COMMON_CONFIG := \
+		--build=$(DEB_BUILD_GNU_TYPE) \
+		--host=$(DEB_HOST_GNU_TYPE) \
+		--libdir=\$${prefix}/lib/php \
+		--libexecdir=\$${prefix}/lib/php \
+		--datadir=\$${prefix}/share/php/$(PHP_NAME_VERSION) \
+		--program-suffix=$(PHP_NAME_VERSION) \
+		--disable-all \
+		--disable-debug \
+		--disable-rpath \
+		--disable-static \
+		--with-pic \
+		--with-layout=GNU \
+		--without-pear \
+		--enable-bcmath \
+		--enable-calendar \
+		--enable-ctype \
+		--enable-dom \
+		--with-enchant \
+		--enable-exif \
+		--with-gettext \
+		--with-gmp \
+		--enable-fileinfo \
+		--enable-filter \
+		--enable-ftp \
+		--enable-hash \
+		--with-iconv \
+		--enable-pdo \
+		--enable-mbregex \
+		--enable-mbregex-backtrack \
+		--enable-mbstring \
+		--enable-phar \
+		--enable-posix \
+		--enable-mysqlnd \
+		--enable-mysqlnd-compression-support \
+		--with-zlib \
+		--with-openssl=yes \
+		--with-libedit \
+		--with-libxml \
+		--with-bz2 \
+		--enable-session \
+		--enable-simplexml \
+		--enable-soap \
+		--enable-sockets \
+		--enable-tokenizer \
+		--enable-xml \
+		--enable-xmlreader \
+		--enable-xmlwriter \
+		--with-xmlrpc \
+		--with-xsl \
+		--with-mhash=yes \
+		--enable-sysvmsg \
+		--enable-sysvsem \
+		--enable-sysvshm \
+		--with-zip \
+		--with-sodium \
+		--with-password-argon2 \
+		--with-system-tzdata \
+		--enable-gd \
+		--enable-gd-native-ttf \
+		--with-jpeg \
+		--with-xpm \
+		--with-png \
+		--with-webp \
+		--with-freetype \
+		--with-vpx-dir \
+		--with-mysql-sock=/var/run/mysqld/mysqld.sock \
+		$(CONFIGURE_DTRACE_ARGS)
+
+# disable all SAPIs in extension build
+ext_config = \
+		--prefix=$(LSPHP_INST_DIR) --enable-cli --disable-cgi --enable-phpdbg=no \
+		--with-config-file-path=$(LSPHP_INST_DIR)/etc/php/$(PHP_NAME_VERSION)/litespeed/ \
+		--with-config-file-scan-dir=$(LSPHP_INST_DIR)/etc/php/$(PHP_NAME_VERSION)/mods-available/ \
+		$(COMMON_CONFIG)
+
+litespeed_config = \
+		--prefix=$(LSPHP_INST_DIR) --enable-cgi --enable-cli --enable-phpdbg=no \
+		--enable-litespeed \
+		--with-config-file-path=$(LSPHP_INST_DIR)/etc/php/$(PHP_NAME_VERSION)/litespeed/ \
+		--with-config-file-scan-dir=$(LSPHP_INST_DIR)/etc/php/$(PHP_NAME_VERSION)/mods-available/ \
+		$(COMMON_CONFIG) \
+		--enable-pcntl
+
+cli_config = \
+		--prefix=$(LSPHP_INST_DIR) --enable-cli --disable-cgi --enable-phpdbg=no \
+		--with-config-file-path=$(LSPHP_INST_DIR)/etc/php/$(PHP_NAME_VERSION)/cli \
+		--with-config-file-scan-dir=$(LSPHP_INST_DIR)/etc/php/$(PHP_NAME_VERSION)/cli/conf.d \
+		$(COMMON_CONFIG) \
+		--enable-pcntl \
+		--with-libedit=shared
+
+export litespeed_config
+
+BUILTIN_EXTENSION_CHECK=$$e=get_loaded_extensions(); natcasesort($$e); \
+			$$s="The following extensions are built in:"; \
+			foreach($$e as $$i) { $$s .= " $$i"; } \
+			echo("php:Extensions=" . wordwrap($$s . ".\n", 75, "\$${Newline}"));
+
+include $(CURDIR)/debian/rules.d/*.mk
+
+#extensions
+
+ext_DEBS       := $(addprefix lsphp83-,$(ext_PACKAGES))
+ext_EXTENSIONS := $(foreach ext_package,$(ext_PACKAGES),$($(ext_package)_EXTENSIONS))
+litespeed_config     += $(foreach ext_ext,$(ext_EXTENSIONS),$($(ext_ext)_config))
+
+
+PREPARE_FILES := $(addprefix debian/,$(shell cat debian/prepare-files))
+
+prepared: prepared-stamp debian/control debian/source.lintian-overrides
+
+prepared-stamp:
+#	$(shell ln -sf /usr/lib/$(DEB_LIBDIR_NAME)/libpcre.so /usr/lib/libpcre.so)
+#	$(shell ln -sf /usr/lib/$(DEB_LIBDIR_NAME)/libldap.so /usr/lib/libldap.so)
+#	$(shell ln -sf /usr/lib/$(DEB_LIBDIR_NAME)/libXpm.so /usr/lib/libXpm.so)
+#	$(shell ln -sf /usr/lib/$(DEB_LIBDIR_NAME)/libgd.so /usr/lib/libgd.so)
+#	$(shell ln -sf /usr/lib/$(DEB_LIBDIR_NAME)/libsybdb.so /usr/lib/libsybdb.so)
+#	$(shell ln -sf /usr/lib/$(DEB_LIBDIR_NAME)/libmysqlclient_r.so /usr/lib/libmysqlclient_r.so)
+#	$(shell ln -sf /usr/lib/$(DEB_LIBDIR_NAME)/libmysqlclient_r.so /usr/lib/libmysqlclient_r.so)
+#	$(shell ln -sf /usr/include/$(DEB_LIBDIR_NAME)/gmp.h /usr/include/gmp.h)
+#	[ -f ext/ext_skel ] && mv ext/ext_skel ext/ext_skel.in
+	$(SED) -i -e 's/EXTRA_VERSION=""/EXTRA_VERSION="-$(PHP_DEBIAN_REVISION)"/' configure.ac
+	./buildconf --force
+
+unprepared:
+	dh_testdir
+	$(SED) -i -e 's/EXTRA_VERSION="-$(PHP_DEBIAN_REVISION)"/EXTRA_VERSION=""/' configure.ac
+#	-[ -f ext/ext_skel.in ] && mv ext/ext_skel.in ext/ext_skel
+
+clean: unprepared
+	rm -f $(PREPARE_FILES)
+	rm -f $(CONFIGURE_TARGETS)
+	rm -f $(BUILD_TARGETS)
+	rm -f $(INSTALL_TARGETS)
+	rm -f $(ext_CONTROL)
+	rm -rf $(addsuffix -build, $(TARGETS))
+	rm -rf lsphp83*
+
+	
+	# clean up autogenerated cruft
+	for package in $(ext_DEBS); do \
+	    for cruft in postinst preinst prerm postrm links dirs install triggers lintian-overrides bug-control bug-script; do \
+	        rm -f debian/$${package}.$${cruft}; \
+	    done; \
+	done
+
+	extdir=`debian/tmp/$(LSPHP_INST_DIR)/bin/php-config --extension-dir | cut -b2- | $(SED) -e "s,usr,$(LSPHP_INST_DIR),g"`; \
+	for sapi in $(REAL_TARGETS); do \
+		$(SAPI_PACKAGE) \
+		for cruft in preinst postinst prerm postrm links dirs install triggers bug-control bug-script lintian-overrides; do \
+			rm -f debian/$${package}.$${cruft}; \
+		done; \
+	done
+
+configure:  debian/control prepared-stamp
+	echo $(shell pwd)
+	CFLAGS="$(CFLAGS)" PROG_SENDMAIL="$(PROG_SENDMAIL)" ./configure ${litespeed_config}
+	touch configure-litespeed-stamp
+
+
+build: configure 
+	make -j8 
+	touch build-litespeed-stamp
+
+build-arch: build
+
+build-indep: build
+	
+
+.NOTPARALLEL: override_dh_auto_install
+
+install: prepare-files-stamp 
+	
+	dh_installdirs -v
+	
+	make install INSTALL_ROOT=$(CURDIR)/debian/tmp
+
+	# get rid of dreaded libtool files
+	find debian/tmp/ -name '*.la' -delete
+	# get rid of static versions of PHP modules (WTF?)
+	rm -f debian/tmp/$(LSPHP_INST_DIR)/lib/php/$(PHP_ZEND_VERSION)/*.a
+	# get rid of readline.so
+	rm -f debian/tmp/$(LSPHP_INST_DIR)/lib/php/$(PHP_ZEND_VERSION)/readline.so
+
+	rm -rf \
+	  debian/tmp/.filemap \
+	  debian/tmp/.channels \
+	  debian/tmp/.lock \
+	  debian/tmp/.depdb* \
+	  debian/tmp/$(LSPHP_INST_DIR)/bin/pear* \
+	  debian/tmp/$(LSPHP_INST_DIR)/bin/pecl* \
+	  debian/tmp/$(LSPHP_INST_DIR)/share/php/.filemap \
+	  debian/tmp/$(LSPHP_INST_DIR)/share/php/.lock \
+	  debian/tmp/$(LSPHP_INST_DIR)/share/php/.depdb* \
+	  debian/tmp/$(LSPHP_INST_DIR)/share/php/*.php \
+	  debian/tmp/$(LSPHP_INST_DIR)/share/php/.registry/ \
+	  debian/tmp/$(LSPHP_INST_DIR)/share/php/.channels/ \
+	  debian/tmp/$(LSPHP_INST_DIR)/share/php/doc/ \
+	  debian/tmp/$(LSPHP_INST_DIR)/share/php/Archive/ \
+	  debian/tmp/$(LSPHP_INST_DIR)/share/php/Console/ \
+	  debian/tmp/$(LSPHP_INST_DIR)/share/php/Structures/ \
+	  debian/tmp/$(LSPHP_INST_DIR)/share/php/test/ \
+	  debian/tmp/$(LSPHP_INST_DIR)/share/php/XML/ \
+	  debian/tmp/$(LSPHP_INST_DIR)/share/php/OS/ \
+	  debian/tmp/$(LSPHP_INST_DIR)/share/php/PEAR/ \
+	  debian/tmp/$(LSPHP_INST_DIR)/share/php/data/ \
+	  debian/tmp/$(LSPHP_INST_DIR)/etc/pear.conf
+
+
+	mkdir -p debian/tmp/$(LSPHP_INST_DIR)/src/
+	tar -cJf debian/tmp/$(LSPHP_INST_DIR)/src/$(PHP_MODULES_SOURCE).tar.xz ext/
+
+
+	# install extra CGI-BIN
+	install -d -m 755 debian/tmp/$(LSPHP_INST_DIR)/lib/cgi-bin/; \
+
+	# sanitize php.ini files
+	mkdir -p debian/$(PHP_COMMON)/$(LSPHP_INST_DIR)/lib/php/$(PHP_NAME_VERSION)/
+	cat php.ini-production | tr "\t" " " | \
+	$(SED) -e'/session.gc_probability =/ s/1/0/g;' \
+	    -e'/disable_functions =/ s/$$/ $(PCNTL_FUNCTIONS)/g;' \
+	    -e'/expose_php =/ s/On/Off/g;' \
+	    -e'/mysqli.default_socket =/ s/=/= \/var\/run\/mysqld\/mysqld.sock/g;' \
+	  > debian/$(PHP_COMMON)/$(LSPHP_INST_DIR)/lib/php/$(PHP_NAME_VERSION)/php.ini-production
+
+	cat php.ini-production | tr "\t" " " | \
+	$(SED) -e'/memory_limit =/ s/128M/-1/g;' \
+	    -e'/session.gc_probability =/ s/1/0/g' \
+	  > debian/$(PHP_COMMON)/$(LSPHP_INST_DIR)/lib/php/$(PHP_NAME_VERSION)/php.ini-production.cli
+
+	cat php.ini-development | tr "\t" " " | \
+	$(SED) -e'/session.gc_probability =/ s/1/0/g;' \
+	    -e'/disable_functions =/ s/$$/ $(PCNTL_FUNCTIONS)/g;' \
+	  > debian/$(PHP_COMMON)/$(LSPHP_INST_DIR)/lib/php/$(PHP_NAME_VERSION)/php.ini-development
+
+	mkdir -p debian/lsphp83-common/var/lib/lsphp83/sessions/
+
+	# install maintainer helper script, these are general php-common files and shared with other phps 
+	mkdir -p debian/lsphp83-common/$(LSPHP_INST_DIR)/bin/
+	install -m 755 debian/debhelper/php-helper debian/lsphp83-common/$(LSPHP_INST_DIR)/bin/php-helper
+	install -m 755 debian/debhelper/php-maintscript-helper debian/lsphp83-common/$(LSPHP_INST_DIR)/bin/php-maintscript-helper
+	install -m 755 debian/debhelper/sessionclean debian/lsphp83-common/$(LSPHP_INST_DIR)/bin/sessionclean
+	install -m 755 debian/debhelper/phpenmod debian/lsphp83-common/$(LSPHP_INST_DIR)/bin/phpenmod
+	install -m 755 debian/debhelper/phpquery debian/lsphp83-common/$(LSPHP_INST_DIR)/bin/phpquery
+	
+	mv debian/tmp/usr/local/lsws/lsphp83/bin/lsphp8.3 debian/tmp/usr/local/lsws/lsphp83/bin/lsphp
+	cp -p debian/tmp/usr/local/lsws/lsphp83/bin/php8.3 debian/tmp/usr/local/lsws/lsphp83/bin/php
+	#cp -p debian/tmp/usr/local/lsws/lsphp83/bin/phar8.3.phar debain/tmp/usr/local/lsws/lsphp83/bin/phar
+	cp -p debian/tmp/usr/local/lsws/lsphp83/bin/phpize8.3 debian/tmp/usr/local/lsws/lsphp83/bin/phpize
+	cp -p debian/tmp/usr/local/lsws/lsphp83/bin/php-config8.3 debian/tmp/usr/local/lsws/lsphp83/bin/php-config
+	cp -p debian/debhelper/phpenmod debian/lsphp83-common/$(LSPHP_INST_DIR)/bin/phpdismod
+	#install -m 755 debian/tmp/usr/local/lsws/lsphp83/bin/phpize8.3 debian/lsphp83-dev/$(LSPHP_INST_DIR)/bin/phpize
+	#install -m 755 debian/tmp/usr/local/lsws/lsphp83/bin/php-config8.3 debian/lsphp83-dev/$(LSPHP_INST_DIR)/bin/php-config
+	#install -m 755 debian/tmp/usr/local/lsws/lsphp83/bin/php8.3 debian/tmp/usr/local/lsws/lsphp83/bin/php	
+
+	
+
+	dh_install --list-missing
+#	dh_install	
+	# shipping duplicate files from other packages is hell for security audits
+#	ln -sf /usr/share/misc/config.guess $(PHPIZE_BUILDDIR)/config.guess
+#	ln -sf /usr/share/misc/config.sub $(PHPIZE_BUILDDIR)/config.sub
+#	#ln -sf /usr/share/aclocal/libtool.m4 $(PHPIZE_BUILDDIR)/libtool.m4
+#	ln -sf /usr/share/libtool/config/ltmain.sh $(PHPIZE_BUILDDIR)/ltmain.sh
+#	ln -sf /usr/bin/shtool $(PHPIZE_BUILDDIR)/shtool
+#	
+#	mkdir -p debian/$(PHP_DEV)/$(LSPHP_INST_DIR)/share/aclocal/
+#	ln -sf /usr/share/aclocal/libtool.m4 debian/$(PHP_DEV)/$(LSPHP_INST_DIR)/share/aclocal/libtool.m4
+#	ln -sf /usr/share/aclocal/ltoptions.m4 debian/$(PHP_DEV)/$(LSPHP_INST_DIR)/share/aclocal/ltoptions.m4
+#	ln -sf /usr/share/aclocal/ltsugar.m4 debian/$(PHP_DEV)/$(LSPHP_INST_DIR)/share/aclocal/ltsugar.m4
+#	ln -sf /usr/share/aclocal/ltversion.m4 debian/$(PHP_DEV)/$(LSPHP_INST_DIR)/share/aclocal/ltversion.m4
+#	ln -sf /usr/share/aclocal/lt~obsolete.m4 debian/$(PHP_DEV)/$(LSPHP_INST_DIR)/share/aclocal/lt~obsolete.m4
+
+	dh_installman
+	dh_installcatalogs
+	dh_installcron
+	dh_installdebconf
+	dh_installemacsen	
+	dh_installifupdown
+	dh_installinfo
+	dh_installinit
+	dh_installmenu
+	dh_installmime
+	dh_installmodules
+	dh_installlogcheck
+	dh_installlogrotate
+	dh_installpam
+	dh_installppp
+	dh_installudev
+	dh_installwm
+	dh_installxfonts
+	#dh_gconf
+	dh_icons
+	dh_perl
+	dh_link
+	dh_compress -Xphp.ini
+
+	touch install-litespeed-stamp
+
+binary-arch:
+	chmod 01733 debian/lsphp83-common/var/lib/lsphp83/sessions/
+	dh_fixperms -i  -p$(PHP_COMMON) -X/var/lib/lsphp83
+	dh_fixperms -i --remaining-packages
+	dh_strip --dbg-package=$(PHP_DBG)
+	dh_makeshlibs -a
+	dh_shlibdeps
+	dh_installdeb
+
+	stored=$$(cat debian/phpapi); \
+	for sapi in $(REAL_TARGETS); do \
+	    $(SAPI_PACKAGE) \
+	    $${sapi}-build/sapi/cli/php -n -r '$(BUILTIN_EXTENSION_CHECK)' \
+	      >> debian/$${package}.substvars; \
+	done; \
+	dh_gencontrol 
+
+	dh_md5sums
+	dh_builddeb
+
+
+binary-indep:
+
+binary: install binary-arch binary-indep
+
+PCNTL_FUNCTIONS := $(shell < ext/pcntl/php_pcntl.h $(SED) -ne "/^PHP_FUNCTION/ s/PHP_FUNCTION(\(.*\));/\1/;t end;d;:end p" | tr '\n' ',')
+
+prepare-files-stamp:
+	# Do this first so we don't overwrite any debhelper-generated files
+	#
+	# generate versioned files from versionless variants
+	for file in $(PREPARE_FILES); do \
+	    versionless=$$(echo $$file | $(SED) -e 's/lsphp83/php/g'); \
+	    versioned=$$(echo $$file); \
+	    package=$$(echo $$file | $(SED) -e 's/\..*$$//'); \
+	    < $${versionless} $(SED_REPLACEMENT) > $${versioned}; \
+	    if [ -x $${versionless} ]; then chmod +x $${versioned}; fi; \
+	done
+	# generate config snippets and maintscripts for the different sapi implementations
+	# from the templates
+	# Here the file for litespeed are manually changed since there is only one target
+	for sapi in $(REAL_TARGETS); do \
+	    $(SAPI_PACKAGE) \
+	    mkdir -p "debian/tmp/$(LSPHP_INST_DIR)/lib/php/$(PHP_NAME_VERSION)/sapi/"; \
+	    touch "debian/tmp/$(LSPHP_INST_DIR)/lib/php/$(PHP_NAME_VERSION)/sapi/$${sapi}"; \
+	    for tmpl in postrm prerm postinst dirs install bug-script bug-control; do \
+	        < debian/php-sapi.$${tmpl} $(SED_REPLACEMENT) > debian/$${package}.$${tmpl}; \
+	        if [ -x debian/php-sapi.$${tmpl} ]; then chmod +x debian/$${package}.$${tmpl}; fi; \
+	    done; \
+	 done
+# 	    < debian/php-sapi.lintian-overrides $(SED_REPLACEMENT) | grep -E "^$${package}" > debian/$${package}.lintian-overrides; 
+# 	done
+
+	mkdir -p debian/tmp/$(LSPHP_INST_DIR)/etc/php/8.3/mods-available; \
+	for module in $(ext_PACKAGES); do \
+	  package=lsphp83-$${module}; \
+	  modules=$$(eval echo \$${$${module}_EXTENSIONS}); \
+	  description=$$(eval echo \$${$${module}_DESCRIPTION}); \
+	  for dsoname in $${modules}; do \
+	    priority=$$(eval echo \$${$${module}_PRIORITY}); \
+	    if [ -z "$${priority}" ]; then priority=20; fi; \
+	    extension=$$(eval echo \$${$${module}_EXTENSION}); \
+	    if [ -z "$${extension}" ]; then extension=extension; fi; \
+	    mkdir -p debian/tmp/$(LSPHP_INST_DIR)/share/$${package}/$${module}/; \
+	    $(SED) -e "s,@extname@,$${module}," \
+	           -e "s,@dsoname@,$${dsoname}," \
+	           -e "s,@extension@,$${extension}," \
+	           -e "s,@priority@,$${priority}," \
+	      < debian/php-module.ini.in \
+	      > debian/tmp/$(LSPHP_INST_DIR)/share/$${package}/$${module}/$${dsoname}.ini; \
+	    echo "$(LSPHP_INST_DIR)/lib/php/*/$${dsoname}.so" >> debian/$${package}.install; \
+	    echo "$(LSPHP_INST_DIR)/share/$${package}/$${module}/$${dsoname}.ini" >> debian/$${package}.install; \
+	  done; \
+	  for tmpl in postinst postrm prerm bug-script bug-control dirs; do \
+	    $(SED) -e "s,@package@,$${package},g"		\
+	           -e "s,@modules@,$${modules},g"		\
+	           -e "s,@module@,$${module},g"		\
+	           -e "s,@priority@,$${priority},g"	\
+	           -e "s,@description@,$${description},g"	\
+	           -e "s,php@PHP_VERSION@,lsphp83,g"	\
+	           -e "s,@PHP_VERSION@,8.3,g"	\
+	           -e "s,@PHP_API@,$${phpapi},g" \
+	      < debian/php-module.$${tmpl}.in \
+	      > debian/$${package}.$${tmpl}; \
+	  done; \
+	done
+	touch prepare-files-stamp
+
+debian/control: debian/control.in debian/rules debian/changelog debian/source.lintian-overrides debian/rules.d/* debian/php-module.control.in
+	$(SED) -e "s/php@PHP_VERSION@/lsphp83/g" -e "s/@BUILT_USING@/$(BUILT_USING)/g" >$@ <$<
+	for ext in $(ext_PACKAGES); do \
+	  package=lsphp83-$${ext}; \
+	  description=$$(eval echo \$${$${ext}_DESCRIPTION}); \
+	  echo >>$@; \
+	  $(SED) -e "s,@package@,$${package}," -e "s,@description@,$${description}," >>$@ <debian/php-module.control.in; \
+	done
+
+debian/source.lintian-overrides: debian/source.lintian-overrides.in debian/rules debian/changelog
+	$(SED) -e "s/php@PHP_VERSION@/$(LSPHP)/g" >$@ <$<
+
+.PHONY: prepared unprepared debian/control debian/source.lintian-overrides binary binary-arch binary-indep install build configure

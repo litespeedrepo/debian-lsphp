@@ -1,0 +1,51 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# debian/rules for PHP defaults
+# Copyright (C) 2011 Ondřej Surý
+# Published under the Expat license
+#
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+PHP_DEFAULT_VERSION := 8.3
+
+SED=sed
+
+export DH_OPTIONS
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	:
+
+override_dh_auto_make:
+	:
+
+override_dh_auto_install:
+	:
+
+override_dh_installcron:
+	dh_installcron -pphp-common --name=php
+
+debian/control: debian/control.in debian/rules debian/changelog
+	$(SED) -e "s/@PHP_VERSION@/$(PHP_DEFAULT_VERSION)/g" >$@ <$<
+	echo >> $@
+	cat debian/modulelist | while read module description; do \
+	    package=php-$${module}; \
+	    depends=php$(PHP_DEFAULT_VERSION)-$${module}; \
+	    $(SED) -e "s/@package@/$${package}/" \
+	           -e "s/@depends@/$${depends}/" \
+	           -e "s/@description@/$${description}/" \
+	           -e "s/@PHP_VERSION@/$(PHP_DEFAULT_VERSION)/g" \
+	    < debian/php-module.control.in \
+	    >> $@; \
+	    echo >> $@; \
+	done;
+	-wrap-and-sort -ab
+
+override_dh_install:
+	mkdir -p debian/$(PHP_COMMON)/var/lib/php/sessions/
+	chmod 01733 debian/$(PHP_COMMON)/var/lib/php/sessions/
+
+	dh_install

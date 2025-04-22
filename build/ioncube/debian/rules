@@ -1,0 +1,50 @@
+#!/usr/bin/make -f
+
+# See debhelper(7) (uncomment to enable)
+# output every command that modifies files on the build system.
+export DH_VERBOSE = 1
+
+
+# see FEATURE AREAS in dpkg-buildflags(1)
+#export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+# see ENVIRONMENT in dpkg-buildflags(1)
+# package maintainers to append CFLAGS
+#export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
+# package maintainers to append LDFLAGS
+#export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
+PACKAGE_NAME      := ioncube
+PHP_VERSION       := 83
+PHP_DOT_VERSION   := 8.3
+PHP_DATE          := 20230831
+PHP_DIR           := /usr/local/lsws/lsphp$(PHP_VERSION)
+BUILD_ROOT        := $(shell pwd)
+
+%:
+				dh $@
+
+override_dh_auto_configure:
+				chmod a+x ioncube_loader_lin_$(PHP_DOT_VERSION).so
+override_dh_usrlocal:
+
+override_dh_auto_install:
+				mkdir -p ioncube/
+
+				# INI File
+				mkdir -p debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/etc/php/$(PHP_DOT_VERSION)/mods-available/
+				cp debian/01-$(PACKAGE_NAME).ini debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/etc/php/$(PHP_DOT_VERSION)/mods-available/01-$(PACKAGE_NAME).ini
+
+				# Share Files
+				mkdir -p debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/share/licenses/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)
+				mkdir -p debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/share/doc/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)
+				cp -pr LICENSE.txt debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/share/licenses/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)
+				cp -pr USER-GUIDE.txt debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/share/doc/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)
+
+				# Module
+				mkdir -p debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/lib/php/$(PHP_DATE)/
+				cp -pr ioncube_loader_lin_$(PHP_DOT_VERSION).so debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/lib/php/$(PHP_DATE)/$(PACKAGE_NAME).so
+				chmod a+x debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/lib/php/$(PHP_DATE)/$(PACKAGE_NAME).so
+
+override_dh_auto_test:
+				$(PHP_DIR)/bin/php --no-php-ini --define zend_extension=$(BUILD_ROOT)/ioncube_loader_lin_$(PHP_DOT_VERSION).so --version | grep 'ionCube.*'
