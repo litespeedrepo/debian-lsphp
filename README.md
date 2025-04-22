@@ -1,9 +1,5 @@
 
 # The LSPHP
-[<img src="https://img.shields.io/badge/slack-LiteSpeed-blue.svg?logo=slack">](litespeedtech.com/slack)
-[![AMD64 Build Status](https://github.com/litespeedrepo/debian-lsphp/actions/workflows/self-host-amd-build.yml/badge.svg)](https://github.com/litespeedrepo/debian-lsphp/actions)
-[![ARM64 Build Status](https://github.com/litespeedrepo/debian-lsphp/actions/workflows/self-host-arm-build.yml/badge.svg)](https://github.com/litespeedrepo/debian-lsphp/actions/)
-
 LiteSpeed PHP is an optimized compilation of PHP built to work with LiteSpeed products through the LiteSpeed SAPI.
 
 ## Installation
