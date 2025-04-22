@@ -1,0 +1,3 @@
+/etc/php/mods-available
+/var/lib/php/sessions
+/var/lib/php/modules

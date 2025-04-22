@@ -1,0 +1,40 @@
+From: Remi Collet <fedora@famillecollet.com>
+Date: Mon, 20 Feb 2017 19:32:37 +0100
+Subject: set sess_binary_protocol off by default with older libmemcached
+
+---
+ memcached.ini   | 4 +++-
+ php_memcached.c | 4 ++++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/memcached.ini b/memcached.ini
+index fa9a6fd..6d05da3 100644
+--- a/memcached.ini
++++ b/memcached.ini
+@@ -64,7 +64,9 @@
+ ; Use the memcached binary protocol for memcached sessions (Instead of the text protocol)
+ ; libmemcached replicas work only if binary mode is enabled.
+ ; However, certain proxies (such as twemproxy) will work only if the binary protocol is disabled.
+-; Default is On. In older versions of php-memcached, this setting was Off and was called memcached.sess_binary.
++; In older versions of php-memcached, this setting was Off and was called memcached.sess_binary.
++; Default is On with libmemcached 1.0.18 or newer.
++; Default is Off with older version.
+ ;memcached.sess_binary_protocol = On
+ 
+ ; memcached session replica read randomize
+diff --git a/php_memcached.c b/php_memcached.c
+index f55cd2e..65d11eb 100644
+--- a/php_memcached.c
++++ b/php_memcached.c
+@@ -339,7 +339,11 @@ PHP_INI_BEGIN()
+ 	MEMC_SESSION_INI_ENTRY("lock_wait_max",          "2000",       OnUpdateLongGEZero,     lock_wait_max)
+ 	MEMC_SESSION_INI_ENTRY("lock_retries",           "5",          OnUpdateLong,           lock_retries)
+ 	MEMC_SESSION_INI_ENTRY("lock_expire",            "0",          OnUpdateLongGEZero,     lock_expiration)
++#if defined(LIBMEMCACHED_VERSION_HEX) && LIBMEMCACHED_VERSION_HEX < 0x01000018
++	MEMC_SESSION_INI_ENTRY("binary_protocol",        "0",          OnUpdateBool,           binary_protocol_enabled)
++#else
+ 	MEMC_SESSION_INI_ENTRY("binary_protocol",        "1",          OnUpdateBool,           binary_protocol_enabled)
++#endif
+ 	MEMC_SESSION_INI_ENTRY("consistent_hash",        "1",          OnUpdateBool,           consistent_hash_enabled)
+ 	MEMC_SESSION_INI_ENTRY("number_of_replicas",     "0",          OnUpdateLongGEZero,     number_of_replicas)
+ 	MEMC_SESSION_INI_ENTRY("randomize_replica_read", "0",          OnUpdateLongGEZero,     randomize_replica_read_enabled)

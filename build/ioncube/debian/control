@@ -1,0 +1,19 @@
+Source: lsphp83-ioncube
+Section: php
+Priority: optional
+Maintainer: litespeed <info@litespeedtech.com>
+Uploaders: litespeed <info@litespeedtech.com>
+Build-Depends: debhelper (>= 9),
+               lsphp83-dev,
+               lsphp83
+Standards-Version: 3.9.8
+Homepage: https://www.ioncube.com/loaders.php
+
+Package: lsphp83-ioncube
+Architecture: any
+Depends: lsphp83-common,
+         ${misc:Depends},
+         ${php:Depends},
+         ${shlibs:Depends}
+Provides: ${php:Provides}
+Description: PHP extension for interfacing with ioncube

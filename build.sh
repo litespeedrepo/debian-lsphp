@@ -8,7 +8,7 @@ if [ $(id -u) != "0" ]; then
     echo "Please run this script as root"
     exit 1
 fi
-PHP_V=84
+PHP_V=83
 product=$1
 dists=$2
 input_archs=$3

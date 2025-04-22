@@ -1,0 +1,33 @@
+Source: lsphp83-apcu
+Section: php
+Priority: optional
+Maintainer: litespeed <info@litespeedtech.com>
+Uploaders: litespeed <info@litespeedtech.com>
+Build-Depends: debhelper (>= 9),
+               libpcre3-dev,
+               lsphp83-dev
+Standards-Version: 3.9.8
+Homepage: https://pecl.php.net/package/APCu
+
+Package: lsphp83-apcu
+Architecture: any
+Depends: lsphp83-common,
+         ${misc:Depends},
+         ${php:Depends},
+         ${shlibs:Depends}
+Suggests: lsphp83-gd
+Conflicts: lsphp83-user-cache,
+           lsphp83-xcache,
+           lsphp83-yac
+Replaces: lsphp83-user-cache
+Provides: lsphp83-user-cache,
+          ${php:Provides}
+Recommends: ${misc:Recommends}
+Description: APC User Cache for PHP
+ The APCu is userland caching: APC (Alternative PHP Cache) stripped of
+ opcode caching after the deployment of Zend OpCache in PHP 5.5 as the
+ primary solution to opcode caching in future versions of PHP.
+ .
+ The APCu is a fast solution for userland caching (and dumping) of PHP
+ variables locally, it is not distributed like MemcacheD, but they can
+ be used together for optimal caching.

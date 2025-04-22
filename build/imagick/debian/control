@@ -1,0 +1,24 @@
+Source: lsphp83-imagick
+Section: php
+Priority: optional
+Maintainer: litespeed <info@litespeedtech.com>
+Uploaders: litespeed <info@litespeedtech.com>
+Build-Depends: debhelper (>= 9),
+               libmagickwand-6.q16-dev | libmagickwand-dev,
+               lsphp83-dev
+Standards-Version: 3.9.8
+
+Package: lsphp83-imagick
+Architecture: any
+Depends: ${misc:Depends},
+         ${php:Depends},
+         ${shlibs:Depends}
+Recommends: ghostscript,
+            ttf-dejavu-core
+Provides: ${php:Provides}
+Description: Provides a wrapper to the ImageMagick library
+ Imagick is a native php extension to create and modify images using the
+ ImageMagick API.
+ This extension requires ImageMagick version 6.2.4+ and PHP 5.1.3+.
+ .
+ IMPORTANT: Version 2.x API is not compatible with earlier versions.

@@ -1,0 +1,23 @@
+Source: lsphp83-igbinary
+Section: php
+Priority: optional
+Maintainer: litespeed <info@litespeedtech.com>
+Uploaders: litespeed <info@litespeedtech.com>
+Build-Depends: debhelper (>= 9),
+               lsphp83-dev,
+               lsphp83-apcu
+Standards-Version: 3.9.8
+
+Package: lsphp83-igbinary
+Architecture: any
+Depends: lsphp83-common,
+         ${misc:Depends},
+         ${php:Depends},
+         ${shlibs:Depends}
+Provides: ${php:Provides}
+Description: igbinary PHP serializer
+ Igbinary is a drop in replacement for the standard PHP serializer.
+ Instead of time and space consuming textual representation, igbinary
+ stores PHP data structures in a compact binary form.  Savings are
+ significant when using memcached or similar memory based storages for
+ serialized data.

@@ -1,0 +1,43 @@
+#!/bin/sh
+
+#set -e
+
+#EXTRA#
+
+php_enable() { return 0; }
+
+if [ "$1" = "purge" ]; then
+  phpini=/usr/local/lsws/lsphp83/etc/php/8.3/litespeed/php.ini
+  # remove the flag to remember the original state
+  if [ -e /usr/local/lsws/lsphp83/etc/php/8.3/litespeed/.start ]; then
+    rm -f /usr/local/lsws/lsphp83/etc/php/8.3/litespeed/.start
+  fi
+  for ext in '~' '%' .bak .ucf-new .ucf-old .ucf-dist;  do
+    rm -f $phpini$ext
+  done
+  rm -f $phpini
+  if which ucf >/dev/null; then
+    ucf --purge $phpini
+  fi
+  if which ucfr >/dev/null; then
+    ucfr --purge lsphp83 $phpini
+  fi
+fi
+
+if [ -e /usr/local/lsws/lsphp83/bin/php-maintscript-helper ] ; then
+  . /usr/local/lsws/lsphp83/bin/php-maintscript-helper
+  mods=$(/usr/local/lsws/lsphp83/bin/phpquery -M -v 8.3)
+  for mod in $mods; do
+    /usr/local/lsws/lsphp83/bin/phpdismod 8.3 litespeed $mod
+  done
+elif [ -e /usr/lib/php/php-maintscript-helper ] ; then
+  . /usr/lib/php/php-maintscript-helper
+  mods=$(phpquery -M -v 8.3)
+  for mod in $mods; do
+    phpdismod 8.3 litespeed $mod
+  done
+fi
+
+#DEBHELPER#
+
+exit 0

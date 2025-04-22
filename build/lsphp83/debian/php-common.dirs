@@ -1,0 +1,6 @@
+/usr/local/lsws/lsphp83/lib/php/@PHP_VERSION@
+/usr/local/lsws/lsphp83/lib/php/@PHP_API@
+/usr/local/lsws/lsphp83/share/doc/php@PHP_VERSION@-common
+/usr/local/lsws/lsphp83/var/lib/php
+/usr/local/lsws/lsphp83/var/lib/php/sessions
+/var/lib/lsphp83/sessions

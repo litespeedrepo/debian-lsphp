@@ -1,0 +1,63 @@
+From: Aaron Stone <aaron@serendipity.cx>
+Date: Thu, 29 Mar 2018 23:26:46 -0700
+Subject: Update for new PHP 7.3 REFCOUNT macros (#390)
+
+---
+ php_memcached.c         | 4 ++--
+ php_memcached_private.h | 7 +++++++
+ php_memcached_session.c | 2 +-
+ 3 files changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/php_memcached.c b/php_memcached.c
+index 65d11eb..fa9553d 100644
+--- a/php_memcached.c
++++ b/php_memcached.c
+@@ -1285,7 +1285,7 @@ static PHP_METHOD(Memcached, __construct)
+ 		le.type = php_memc_list_entry();
+ 		le.ptr  = intern->memc;
+ 
+-		GC_REFCOUNT(&le) = 1;
++		GC_SET_REFCOUNT(&le, 1);
+ 
+ 		/* plist_key is not a persistent allocated key, thus we use str_update here */
+ 		if (zend_hash_str_update_mem(&EG(persistent_list), ZSTR_VAL(plist_key), ZSTR_LEN(plist_key), &le, sizeof(le)) == NULL) {
+@@ -3658,7 +3658,7 @@ PHP_METHOD(MemcachedServer, on)
+ 
+ 		Z_TRY_ADDREF(fci.function_name);
+ 		if (fci.object) {
+-			GC_REFCOUNT(fci.object)++;
++			GC_ADDREF(fci.object);
+ 		}
+ 	}
+ 	RETURN_BOOL(rc);
+diff --git a/php_memcached_private.h b/php_memcached_private.h
+index a04e19b..abc0459 100644
+--- a/php_memcached_private.h
++++ b/php_memcached_private.h
+@@ -72,6 +72,13 @@ typedef unsigned long int uint32_t;
+ #  endif
+ #endif
+ 
++/* Backwards compatibility for GC API change in PHP 7.3 */
++#if PHP_VERSION_ID < 70300
++#  define GC_ADDREF(p)            ++GC_REFCOUNT(p)
++#  define GC_DELREF(p)            --GC_REFCOUNT(p)
++#  define GC_SET_REFCOUNT(p, rc)  GC_REFCOUNT(p) = rc
++#endif
++
+ /****************************************
+   Structures and definitions
+ ****************************************/
+diff --git a/php_memcached_session.c b/php_memcached_session.c
+index afa973b..230b433 100644
+--- a/php_memcached_session.c
++++ b/php_memcached_session.c
+@@ -376,7 +376,7 @@ PS_OPEN_FUNC(memcached)
+ 		le.type = s_memc_sess_list_entry();
+ 		le.ptr  = memc;
+ 
+-		GC_REFCOUNT(&le) = 1;
++		GC_SET_REFCOUNT(&le, 1);
+ 
+ 		/* plist_key is not a persistent allocated key, thus we use str_update here */
+ 		if (zend_hash_str_update_mem(&EG(persistent_list), plist_key, plist_key_len, &le, sizeof(le)) == NULL) {

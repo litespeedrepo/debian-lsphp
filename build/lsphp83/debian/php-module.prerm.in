@@ -1,0 +1,24 @@
+#!/bin/sh
+
+#set -ex
+
+#EXTRA#
+
+if [ "$1" = "remove" ] || [ "$1" = "deconfigure" ]; then
+  if [ -e /usr/local/lsws/lsphp83/bin/php-maintscript-helper ] ; then
+    . /usr/local/lsws/lsphp83/bin/php-maintscript-helper
+  elif [ -e /usr/lib/php/php-maintscript-helper ] ; then
+    . /usr/lib/php/php-maintscript-helper
+  fi
+
+  for dsoname in @modules@; do
+    if [ -e /usr/local/lsws/lsphp83/bin/phpdismod ] ; then
+      /usr/local/lsws/lsphp83/bin/phpdismod ALL ALL ${dsoname}
+    elif [ -e /usr/sbin/phpdismod ] ; then
+      phpdismod ALL ALL ${dsoname}
+    fi
+  done
+fi
+
+
+exit 0

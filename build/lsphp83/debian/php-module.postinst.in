@@ -1,0 +1,39 @@
+#!/bin/sh
+
+#set -ex
+
+#EXTRA#
+
+if [ "$1" = "configure" ]; then
+  inidir=/usr/local/lsws/lsphp83/etc/php/8.3/mods-available
+
+  if [ -e /usr/local/lsws/lsphp83/bin/php-maintscript-helper ] ; then
+    . /usr/local/lsws/lsphp83/bin/php-maintscript-helper
+  elif [ -e /usr/lib/php/php-maintscript-helper ] ; then
+    . /usr/lib/php/php-maintscript-helper
+  fi
+
+  for dsoname in @modules@; do
+    inifile=${dsoname}.ini
+
+    # Register new conffile with UCF
+    ucf /usr/local/lsws/lsphp83/share/@package@/@module@/${inifile} ${inidir}/${inifile}
+    ucfr --force @package@ ${inidir}/${inifile}
+      
+    if [ -f "${inidir}/${inifile}.dpkg-new" ]; then
+      md5sum="$(md5sum ${inidir}/${inifile}.dpkg-new | sed -e 's/ .*//')"
+      old_md5sum="$(md5sum ${inidir}/${inifile} | sed -e 's/ .*//')"
+      if [ "$md5sum" = "$old_md5sum" ]; then
+        mv "${inidir}/${inifile}.dpkg-new" "${inidir}/${inifile}"
+      fi
+    fi
+  
+    if [ -e /usr/local/lsws/lsphp83/bin/phpenmod ] ; then
+      /usr/local/lsws/lsphp83/bin/phpenmod ALL ALL ${dsoname}
+    elif [ -e /usr/sbin/phpenmod ] ; then
+      phpenmod ALL ALL ${dsoname}
+    fi
+  done
+fi
+
+exit 0

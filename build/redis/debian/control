@@ -1,0 +1,23 @@
+Source: lsphp83-redis
+Section: php
+Priority: optional
+Maintainer: litespeed <info@litespeedtech.com>
+Uploaders: litespeed <info@litespeedtech.com>
+Build-Depends: debhelper (>= 9),
+               lsphp83-dev,
+               lsphp83-igbinary
+Standards-Version: 3.9.8
+
+Package: lsphp83-redis
+Architecture: any
+Depends: lsphp83-igbinary,
+         lsphp83-common,
+         ${misc:Depends},
+         ${php:Depends},
+         ${shlibs:Depends}
+Suggests: redis-server
+Provides: ${php:Provides}
+Description: PHP extension for interfacing with Redis
+ This extension allows php applications to communicate with the Redis
+ persistent key-value store.  The php-redis module provides an easy
+ object oriented interface.

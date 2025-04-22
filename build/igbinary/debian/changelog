@@ -1,0 +1,5 @@
+lsphp#PHP_VERSION#-igbinary (#VERSION#-#BUILD_REVISION#+#DIST#) #DIST#; urgency=medium
+
+  * This is build #BUILD_REVISION# of lsphp#PHP_VERSION#-igbinary version #VERSION#
+
+ -- lsadm <info@litespeedtech.com>  #DATE# +0100

@@ -1,0 +1,23 @@
+#!/bin/sh
+
+MATCH="^[[:space:]]*($|;)"
+
+echo "==== Additional LSPHP 8.3 information ====" >&3
+echo "" >&3
+echo "++++ LSPHP 8.3 SAPI (php8.3query -S): ++++" >&3
+/usr/local/lsws/lsphp83/bin/phpquery -S >&3
+echo "" >&3
+echo "++++ LSPHP 8.3 Extensions (php8.3query -M -v): ++++" >&3
+/usr/local/lsws/lsphp83/bin/phpquery -M -v >&3
+echo "" >&3
+
+echo "++++ Configuration files: ++++" >&3
+"**** /usr/local/lsws/lsphp83/etc/php/8.3/litespeed/php.ini ****" >&3
+grep -Ev "$MATCH" /usr/local/lsws/lsphp83/etc/php/8.3/litespeed/php.ini >&3
+echo "" >&3
+find /usr/local/lsws/lsphp83/etc/php/8.3/mods-available/ -name '*.ini' | \
+while read CONF; do
+    echo "**** $CONF ****" >&3
+    grep -Ev "$MATCH" "$CONF" >&3
+    echo "" >&3
+done

@@ -1,0 +1,30 @@
+Source: lsphp83-memcached
+Section: php
+Priority: optional
+Maintainer: litespeed <info@litespeedtech.com>
+Uploaders: litespeed <info@litespeedtech.com>
+Build-Depends: debhelper (>= 9),
+               lsphp83-dev,
+               lsphp83-igbinary,
+               lsphp83-msgpack,
+               libmemcached11,
+               libmemcached-dev (>= 1.0.18),
+               pkg-config,
+               zlib1g-dev
+Standards-Version: 3.9.8
+
+Package: lsphp83-memcached
+Architecture: any
+Depends: lsphp83-igbinary,
+         lsphp83-msgpack,
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+         ${shlibs:Depends}
+Provides: ${php:Provides}
+Description: memcached extension module for PHP, uses libmemcached
+ Memcached is a caching daemon designed especially for dynamic web
+ applications to decrease database load by storing objects in memory.
+ .
+ This extension uses libmemcached library to provide API for
+ communicating with memcached servers.

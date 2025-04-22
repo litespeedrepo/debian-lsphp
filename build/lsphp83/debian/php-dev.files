@@ -1,0 +1,8 @@
+/usr/local/lsws/lsphp83/bin/php-config@PHP_VERSION@
+/usr/local/lsws/lsphp83/bin/phpize@PHP_VERSION@
+/usr/local/lsws/lsphp83/bin/php-config
+/usr/local/lsws/lsphp83/bin/phpize
+/usr/local/lsws/lsphp83/share/man/man1/php-config@PHP_VERSION@.1
+/usr/local/lsws/lsphp83/share/man/man1/phpize@PHP_VERSION@.1
+/usr/local/lsws/lsphp83/include
+/usr/local/lsws/lsphp83/lib/php/@PHP_VERSION@/build

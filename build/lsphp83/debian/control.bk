@@ -1,0 +1,386 @@
+Source: php8.3
+Section: php
+Priority: optional
+Maintainer: Debian PHP Maintainers <pkg-php-maint@lists.alioth.debian.org>
+Uploaders: Ondřej Surý <ondrej@debian.org>,
+           Thijs Kinkhorst <thijs@debian.org>,
+           Lior Kaplan <kaplan@debian.org>
+Build-Depends: autoconf (>= 2.59),
+               automake (>= 1.11) | automake1.11,
+               bison,
+               chrpath,
+               debhelper,
+               dpkg-dev, 
+               flex,
+               freetds-dev,
+               libapparmor-dev,
+               libapr1-dev, 
+               libbz2-dev,
+               libc-client-dev,
+               libcurl4-openssl-dev | libcurl-dev,
+               libdb-dev,
+               libedit-dev,
+               libenchant-dev,
+               libevent-dev,
+               libexpat1-dev,
+               libfreetype6-dev,
+               libgcrypt11-dev,
+               libgd-dev | libgd2-dev,
+               libglib2.0-dev,
+               libgmp3-dev,
+               libicu-dev,
+               libjpeg-dev | libjpeg62-dev,
+               libkrb5-dev,
+               libldap2-dev,
+               libmagic-dev,
+               libmcrypt-dev,
+               libmhash-dev,
+               libonig-dev,
+               libpam0g-dev,
+               libpcre3-dev,
+               libpng-dev | libpng12-dev,
+               libpq-dev,
+               libpspell-dev,
+               libqdbm-dev,
+               librecode-dev,
+               libsasl2-dev,
+               libsnmp-dev,
+               libsqlite3-dev,
+               libssl-dev,
+               libtidy-dev,
+               libtool,
+               libvpx-dev,
+               libwrap0-dev,
+               libxml2-dev,
+               libxmlrpc-core-c3-dev,
+               libxmltok1-dev,
+               libxslt1-dev,
+               libzip-dev,
+               locales-all | language-pack-de,
+               mysql-server | virtual-mysql-server,
+               netbase,
+               netcat-traditional,
+               re2c,
+               systemtap-sdt-dev [amd64 i386 powerpc armel armhf ia64],
+               tzdata,
+               unixodbc-dev,
+               zlib1g-dev
+Build-Conflicts: bind-dev
+Standards-Version: 3.9.6
+Vcs-Git: git://anonscm.debian.org/pkg-php/php.git
+Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-php/php.git
+Homepage: http://www.php.net/
+XS-Testsuite: autopkgtest
+
+Package: lsphp83
+Architecture: any
+Depends: libmagic1,
+         mime-support,
+         lsphp83-common (>= ${source:Version}),
+         lsphp83-json,
+         lsphp83-opcache,
+         tzdata,
+         ucf,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Provides: ${php:Provides}
+Breaks: 
+Replaces: 
+Recommends: php-readline
+Suggests: php-pear
+Description: server-side, HTML-embedded scripting language (LSAPI binary)
+ This package provides the /usr/local/lsws/bin/lsphp LSAPI interpreter 
+ built for use in LiteSpeed Web Server (lsws).
+ .
+ ${php:Extensions}
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: lsphp83-common
+Architecture: all
+Depends: ${misc:Depends}
+Suggests: php-user-cache
+Conflicts: 
+Description: Common files for packages built from the PHP source
+ This package contains the documentation and example files relevant to all
+ the other packages built from the PHP source.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: lsphp83-dbg
+Depends: lsphp83 (= ${binary:Version}),
+         ${misc:Depends}
+Recommends: gdb
+Section: debug
+Priority: extra
+Architecture: any
+Description: Debug symbols for LSPHP70
+ This package provides the debug symbols for PHP70 needed for properly
+ debugging errors in PHP70 with gdb.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: lsphp83-dev
+Depends: autoconf ,
+         automake ,
+         libpcre3-dev,
+         libssl-dev,
+         libtool ,
+         lsphp83-common (>= ${source:Version}),
+         shtool,
+         ${misc:Depends},
+         ${perl:Depends}
+Conflicts: ${libtool:Conflicts}
+Architecture: any
+Recommends: pkg-php-tools
+Description: Files for PHP70 module development
+ This package provides the files from the PHP70 source needed for compiling
+ additional modules.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: lsphp83-modules-source
+Architecture: all
+Depends: lsphp83-dev,
+         ${misc:Depends}
+Description: PHP 70 modules source package
+ This package contains source for PHP 70 modules that can be
+ built using phpize70.  It is mainly used to generate packages
+ with PHP modules built from the main PHP package.
+ .
+ You probably don't want to install this package unless you want to
+ build specific PHP module that is not distributed with Debian itself.
+
+
+
+Package: lsphp83-recode
+Architecture: any
+Depends: lsphp83-common,
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Description: recode module for PHP
+ This package provides a recode module for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: lsphp83-sqlite3
+Architecture: any
+Depends: lsphp83-common,
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Description: SQLite3 module for PHP
+ This package provides a SQLite3 module for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: lsphp83-sybase
+Architecture: any
+Depends: lsphp83-common,
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Description: Sybase module for PHP
+ This package provides a Sybase module for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: lsphp83-ldap
+Architecture: any
+Depends: lsphp83-common,
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Description: LDAP module for PHP
+ This package provides a LDAP module for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: lsphp83-intl
+Architecture: any
+Depends: lsphp83-common,
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Description: Internationalisation module for PHP
+ This package provides a Internationalisation module for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: lsphp83-snmp
+Architecture: any
+Depends: lsphp83-common,
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Description: SNMP module for PHP
+ This package provides a SNMP module for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: lsphp83-json
+Architecture: any
+Depends: lsphp83-common,
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Description: JSON module for PHP
+ This package provides a JSON module for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: lsphp83-pgsql
+Architecture: any
+Depends: lsphp83-common,
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Description: PostgreSQL module for PHP
+ This package provides a PostgreSQL module for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: lsphp83-opcache
+Architecture: any
+Depends: lsphp83-common,
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Description: Zend OpCache module for PHP
+ This package provides a Zend OpCache module for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: lsphp83-imap
+Architecture: any
+Depends: lsphp83-common,
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Description: IMAP module for PHP
+ This package provides a IMAP module for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: lsphp83-mysql
+Architecture: any
+Depends: lsphp83-common,
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Description: MySQL module for PHP
+ This package provides a MySQL module for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: lsphp83-tidy
+Architecture: any
+Depends: lsphp83-common,
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Description: tidy module for PHP
+ This package provides a tidy module for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: lsphp83-pspell
+Architecture: any
+Depends: lsphp83-common,
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Description: pspell module for PHP
+ This package provides a pspell module for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: lsphp83-curl
+Architecture: any
+Depends: lsphp83-common,
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Description: CURL module for PHP
+ This package provides a CURL module for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
