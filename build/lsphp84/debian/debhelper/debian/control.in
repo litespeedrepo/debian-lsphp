@@ -1,0 +1,25 @@
+Source: php-defaults
+Section: php
+Priority: optional
+Maintainer: Debian PHP Maintainers <pkg-php-maint@lists.alioth.debian.org>
+Uploaders: Ondřej Surý <ondrej@debian.org>,
+           Thijs Kinkhorst <thijs@debian.org>,
+           Lior Kaplan <kaplan@debian.org>
+Standards-Version: 3.9.6
+Build-Depends: debhelper (>= 9)
+Vcs-Browser: http://anonscm.debian.org/?p=pkg-php/php-defaults.git
+Vcs-Git: git://anonscm.debian.org/pkg-php/php-defaults.git
+
+Package: php-common
+Architecture: all
+Section: php
+Depends: psmisc (>= 22.15-1~),
+         sed (>= 4.1.1-1),
+         ${misc:Depends}
+Description: Common files for PHP packages
+ This package contains common utilities shared among all packaged PHP
+ versions.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.

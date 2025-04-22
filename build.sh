@@ -77,5 +77,6 @@ for dist in $dists; do
 done
 
 upload_to_server
+gen_dev_release
 
 echo $(date)

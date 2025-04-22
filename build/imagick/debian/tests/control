@@ -1,0 +1,2 @@
+Test-Command: cd imagick-*/tests && phpunit --verbose .
+Depends: php-cli, php-imagick, gsfonts, imagemagick-6.q16, phpunit

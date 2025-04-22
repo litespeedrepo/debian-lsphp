@@ -1,0 +1,71 @@
+name: self-host-amd64-build
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: 'package name'
+        required: true
+        default: 'lsphp'
+        type: choice
+        options:
+          - '"lsphp"'
+          - '"apcu"'
+          - '"imagick"'
+          - '"ioncube"'
+          - '"memcached"'
+          - '"msgpack"'
+          - '"pear"'
+          - '"redis"'
+          - '"igbinary"'
+          - '"lsphp","pear","igbinary","apcu","imagick","ioncube","msgpack","memcached","redis"'
+      version:
+        description: 'version number'
+        type: number
+      revision:
+        description: 'revision number'
+        type: number        
+      distro:
+        description: 'distro'
+        required: true
+        default: 'noble'
+        type: choice
+        options:
+          - '"noble"'
+          - '"jammy"'
+          - '"focal"'
+          - '"bookworm"'
+          - '"bullseye"'
+          - '"buster"'
+          - '"noble","jammy","focal","bookworm","bullseye","buster"'
+
+jobs:
+  package:
+    runs-on: [self-hosted, linux, x64]
+    container:
+      image: eggcold/debian-build
+      options: --user root --cap-add SYS_ADMIN --security-opt seccomp=unconfined --security-opt apparmor=unconfined
+    strategy:
+      matrix:
+        package: ${{ fromJSON(format('[{0}]', inputs.package)) }}
+        distro: ${{ fromJSON(format('[{0}]', inputs.distro)) }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: build with ${{ github.head_ref || github.ref_name }} branch
+        #if: ${{ (github.ref == 'refs/heads/main') }}
+        run: |
+            cp /root/.pbuilderrc $HOME/
+            bash build.sh ${{ matrix.package }} ${{ matrix.distro }} amd64
+        env:
+          BUILD_KEY: ${{ secrets.BUILD_KEY }}
+          version: ${{ inputs.version }}
+          revision: ${{ inputs.revision }}
+      #- name: build with ${{ github.head_ref || github.ref_name }} branch
+      #  if: ${{ (github.ref != 'refs/heads/main') }}
+      #  run: |
+      #      cp /root/.pbuilderrc $HOME/
+      #      bash build.sh ${{ matrix.package }} ${{ matrix.distro }} amd64 dev yes
+      #  env:
+      #    version: ${{ inputs.version }}
+      #    revision: ${{ inputs.revision }} 
+      #    BUILD_KEY: ${{ secrets.BUILD_KEY }}

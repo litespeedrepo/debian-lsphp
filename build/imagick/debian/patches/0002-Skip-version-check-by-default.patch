@@ -1,0 +1,30 @@
+From: =?utf-8?q?Ond=C5=99ej_Sur=C3=BD?= <ondrej@sury.org>
+Date: Tue, 1 Nov 2016 08:56:57 +0100
+Subject: Skip version check by default
+
+---
+ imagick.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/imagick.c b/imagick.c
+index b51472e..51d1511 100755
+--- a/imagick.c
++++ b/imagick.c
+@@ -3219,7 +3219,7 @@ static zend_object_value php_imagickkernel_object_new(zend_class_entry *class_ty
+ 
+ PHP_INI_BEGIN()
+ 	STD_PHP_INI_ENTRY("imagick.locale_fix", "0", PHP_INI_ALL, OnUpdateBool, locale_fix, zend_imagick_globals, imagick_globals)
+-	STD_PHP_INI_ENTRY("imagick.skip_version_check", "0", PHP_INI_ALL, OnUpdateBool, skip_version_check, zend_imagick_globals, imagick_globals)
++	STD_PHP_INI_ENTRY("imagick.skip_version_check", "1", PHP_INI_ALL, OnUpdateBool, skip_version_check, zend_imagick_globals, imagick_globals)
+ 	STD_PHP_INI_ENTRY("imagick.progress_monitor", "0", PHP_INI_SYSTEM, OnUpdateBool, progress_monitor, zend_imagick_globals, imagick_globals)
+ PHP_INI_END()
+ 
+@@ -3227,7 +3227,7 @@ static void php_imagick_init_globals(zend_imagick_globals *imagick_globals)
+ {
+ 	imagick_globals->locale_fix = 0;
+ 	imagick_globals->progress_monitor = 0;
+-	imagick_globals->skip_version_check = 0;
++	imagick_globals->skip_version_check = 1;
+ }
+ 
+ 

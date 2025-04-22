@@ -1,0 +1,13 @@
+0003-force_libmysqlclient_r.patch
+0004-qdbm-is-usr_include_qdbm.patch
+0005-fix-buster.patch
+0006-temporary-path-fixes-for-multiarch.patch
+0030-curl-multiarch.patch
+0031-Add-patch-to-install-php7-module-directly-to-APXS_LI.patch
+0032-libtool2.2.patch
+0033-Include-all-libtool-files-from-phpize.m4.patch
+0041-scripts-php-.in-Explicitly-define-the-path-to-sed.patch
+0042-Remove-timestamps-from-phar.patch
+0043-Disable-assembly-detection-in-Zend-arithmetic-with-g.patch
+0044-Disable-avx-detection-with-gcc-6.patch
+0046-Add-missing-header-includes.patch
