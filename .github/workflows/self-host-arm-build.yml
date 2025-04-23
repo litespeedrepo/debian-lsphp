@@ -48,6 +48,8 @@ jobs:
       matrix:
         package: ${{ fromJSON(format('[{0}]', inputs.package)) }}
         distro: ${{ fromJSON(format('[{0}]', inputs.distro)) }}
+      fail-fast: true
+      max-parallel: 1
     steps:
       - uses: actions/checkout@v3
       - name: build with ${{ github.head_ref || github.ref_name }} branch
