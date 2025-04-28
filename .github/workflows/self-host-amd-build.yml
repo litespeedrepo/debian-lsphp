@@ -55,7 +55,8 @@ jobs:
         #if: ${{ (github.ref == 'refs/heads/main') }}
         run: |
             cp /root/.pbuilderrc $HOME/
-            wget -q -O - https://repo-dev.litespeedtech.com/debian/enable_dev_repo.sh | bash
+            cp D05deps $HOME/
+            cp B92test-pkg $HOME/
             bash build.sh ${{ matrix.package }} ${{ matrix.distro }} amd64
         env:
           BUILD_KEY: ${{ secrets.BUILD_KEY }}
