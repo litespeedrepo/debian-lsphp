@@ -58,7 +58,7 @@ jobs:
             cp /root/.pbuilderrc $HOME/
             cp D05deps $HOME/
             cp B92test-pkg $HOME/
-            bash build.sh ${{ matrix.package }} ${{ matrix.distro }} arm64
+            bash build.sh ${{ matrix.package }} ${{ matrix.distro }} arm64 --push
         env:
           BUILD_KEY: ${{ secrets.BUILD_KEY }}
           version: ${{ inputs.version }}
