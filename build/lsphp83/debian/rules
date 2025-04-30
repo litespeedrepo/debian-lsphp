@@ -518,7 +518,7 @@ debian/source.lintian-overrides: debian/source.lintian-overrides.in debian/rules
 	$(SED) -e "s/php@PHP_VERSION@/$(LSPHP)/g" >$@ <$<
 
 override_dh_builddeb:
-    dh_builddeb -- -Zxz
+	dh_builddeb -- -Zxz
 
 
 .PHONY: prepared unprepared debian/control debian/source.lintian-overrides binary binary-arch binary-indep install build configure
