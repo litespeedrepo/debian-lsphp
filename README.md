@@ -2,17 +2,19 @@
 # The LSPHP
 LiteSpeed PHP is an optimized compilation of PHP built to work with LiteSpeed products through the LiteSpeed SAPI.
 
-## Installation
-
-### Prebuilt packages 
+## Prebuilt packages 
 The easiest way to get up and running with PHP is to use the LiteSpeed Repository. The LiteSpeed Repository comes with prebuilt PHP packages with LiteSpeed support built in.
 [Document Link](https://docs.litespeedtech.com/lsws/extapp/php/getting_started/)
 
-### Building PHP from source code
-Clone the repository, and run the build script to build the package. 
-```
-bash build.sh lsphp83 noble amd64
-```
+## Building custom PHP from local
+To build a custom package on a local server. 
+1. Install git, docker, pbuilder and debhelper
+2. Start container with command, `docker run -d --name packagebuild --user root --cap-add SYS_ADMIN --security-opt seccomp=unconfined --security-opt apparmor=unconfined -it eggcold/debian-build`
+3. Login to the container: `docker exec -it packagebuild bash`
+4. clone the repo or your forked repo, `git clone https://github.com/litespeedrepo/debian-lsphp.git`
+5. Switch branch, e.g. php84: `git checkout php84`
+6. Run example command to build, e.g. apcu package for bookworm distribution: `./build.sh apcu bookworm amd64`
+7. Result deb will be stored under, e.g. **build/apcu/lsphp84-5.1.24-1/build-result/bookworm/** folder
 
 ## Support, Feedback, and Collaboration
 
