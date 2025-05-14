@@ -7,7 +7,7 @@ product=$1
 dists=$2
 input_archs=$3
 PUSH_FLAG='OFF'
-lsapi_version=8.1
+lsapi_version=8.2
 version=
 revision=
 
