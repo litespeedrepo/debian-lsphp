@@ -10,15 +10,16 @@ on:
         type: choice
         options:
           - '"lsphp"'
+          - '"imap"'     
+          - '"pear"'               
           - '"apcu"'
+          - '"igbinary"'          
           - '"imagick"'
           - '"ioncube"'
+          - '"msgpack"'          
           - '"memcached"'
-          - '"msgpack"'
-          - '"pear"'
           - '"redis"'
-          - '"igbinary"'
-          - '"lsphp","pear","apcu","igbinary","imagick","ioncube","msgpack","memcached","redis"'
+          - '"lsphp","imap","pear","apcu","igbinary","imagick","ioncube","msgpack","memcached","redis"'
       version:
         description: 'version number'
         type: number

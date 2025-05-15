@@ -1,0 +1,22 @@
+Source: lsphp84-imap
+Section: php
+Priority: optional
+Maintainer: litespeed <info@litespeedtech.com>
+Uploaders: litespeed <info@litespeedtech.com>
+Build-Depends: debhelper (>= 9),
+               lsphp84-dev,
+               pkg-config,
+               libc-client-dev,
+               libssl-dev,
+               libkrb5-dev,
+               libpam0g-dev
+Standards-Version: 4.6.2 
+
+Package: lsphp84-imap
+Architecture: any
+Depends: lsphp84-common,
+         ${misc:Depends},
+         ${php:Depends},
+         ${shlibs:Depends}
+Provides: ${php:Provides}
+Description: IMAP is an email protocol that allows users to access and manage their emails stored on a remote server. 
