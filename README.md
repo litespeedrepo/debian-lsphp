@@ -1,8 +1,12 @@
 
 # The LSPHP
 [<img src="https://img.shields.io/badge/slack-LiteSpeed-blue.svg?logo=slack">](litespeedtech.com/slack)
-[![AMD64 Build Status](https://github.com/litespeedrepo/debian-lsphp/actions/workflows/self-host-amd-build.yml/badge.svg)](https://github.com/litespeedrepo/debian-lsphp/actions)
-[![ARM64 Build Status](https://github.com/litespeedrepo/debian-lsphp/actions/workflows/self-host-arm-build.yml/badge.svg)](https://github.com/litespeedrepo/debian-lsphp/actions/)
+
+|Architecture| PHP 8.4  | PHP 8.3  |
+|----------------------------------|----------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|
+| **AMD64** | ![PHP84 AMD64](https://img.shields.io/github/actions/workflow/status/litespeedrepo/debian-lsphp/self-host-amd-build.yml?branch=php84&label=build) | ![PHP83 AMD64](https://img.shields.io/github/actions/workflow/status/litespeedrepo/debian-lsphp/self-host-amd-build.yml?branch=php83&label=build) |
+| **ARM64** | ![PHP84 ARM64](https://img.shields.io/github/actions/workflow/status/litespeedrepo/debian-lsphp/self-host-arm-build.yml?branch=php84&label=build) | ![PHP83 ARM64](https://img.shields.io/github/actions/workflow/status/litespeedrepo/debian-lsphp/self-host-arm-build.yml?branch=php83&label=build) |
+
 
 LiteSpeed PHP is an optimized compilation of PHP built to work with LiteSpeed products through the LiteSpeed SAPI.
 
