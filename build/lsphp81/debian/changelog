@@ -1,0 +1,7 @@
+php8.1 (#VERSION#-#BUILD_REVISION#+#DIST#) #DIST#; urgency=medium
+
+  * This is build #BUILD_REVISION# of lsphp81 
+  * 
+
+ -- lsadm <info@litespeedtech.com>  #DATE# +0100
+

@@ -1,4 +1,4 @@
-lsphp=8.3.21
+lsphp=8.1.32
 apcu=5.1.24
 imagick=3.8.0
 ioncube=14.4.0

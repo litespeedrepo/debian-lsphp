@@ -63,12 +63,12 @@ set_build_dir(){
 prepare_source(){
     cd $BUILD_DIR
     case "$product" in
-    lsphp83)
+    lsphp81)
         source_url="http://us2.php.net/distributions/php-$version.tar.gz"
         wget $source_url
         tar xzf php-$version.tar.gz
 
-        source_folder_name=php8.3-$version
+        source_folder_name=php8.1-$version
         mv php-$version $source_folder_name
 
         SOURCE_DIR=$BUILD_DIR/$source_folder_name
@@ -90,7 +90,7 @@ prepare_source(){
 
         cd ..
         #prepare the patched source as orig.tar.xz file
-        tar -cJf php8.3_${version}.orig.tar.xz ${source_folder_name}
+        tar -cJf php8.1_${version}.orig.tar.xz ${source_folder_name}
         ;;
     lsphp${PHP_VERSION_NUMBER}-${PHP_EXTENSION})
         if [ ${PHP_EXTENSION} == 'ioncube' ] ; then

@@ -1,0 +1,38 @@
+#!/bin/sh
+
+#set -e
+
+#EXTRA#
+
+CONFDIR=/usr/local/lsws/lsphp81/etc/php/8.1/mods-available
+
+if [ "$1" = "configure" ]; then
+  phpini="/usr/local/lsws/lsphp81/etc/php/8.1/litespeed/php.ini"
+
+  ucf /usr/local/lsws/lsphp81/lib/php/@PHP_VERSION@/php.ini-production $phpini
+  ucfr lsphp81 $phpini
+
+  if [ -e /usr/local/lsws/lsphp81/bin/php-maintscript-helper ] ; then
+    . /usr/local/lsws/lsphp81/bin/php-maintscript-helper
+  elif [ -e /usr/lib/php/php-maintscript-helper ] ; then
+    . /usr/lib/php/php-maintscript-helper
+  fi
+  
+  if [ -e /usr/local/lsws/lsphp81/bin/phpquery ] ; then
+    mods=$(/usr/local/lsws/lsphp81/bin/phpquery -M -v 8.1)
+  elif [ -e /usr/sbin/phpquery ] ; then
+    mods=$(phpquery -M -v 8.1)
+  fi
+  
+  for mod in $mods; do
+    if [ -e /usr/local/lsws/lsphp81/bin/phpenmod ] ; then
+      /usr/local/lsws/lsphp81/bin/phpenmod 8.1 litespeed $mod
+    elif [ -e /usr/sbin/phpenmod ] ; then
+      phpenmod 8.1 litespeed $mod
+    fi
+  done
+fi
+
+#DEBHELPER#
+
+exit 0
