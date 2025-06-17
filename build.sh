@@ -2,7 +2,7 @@
 target_server='repo-dev.litespeedtech.com'
 prod_server='rpms.litespeedtech.com'
 EPACE='        '
-PHP_V=83
+PHP_V=82
 product=$1
 dists=$2
 input_archs=$3

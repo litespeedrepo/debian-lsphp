@@ -1,0 +1,8 @@
+/usr/local/lsws/lsphp82/bin/php-config@PHP_VERSION@
+/usr/local/lsws/lsphp82/bin/phpize@PHP_VERSION@
+/usr/local/lsws/lsphp82/bin/php-config
+/usr/local/lsws/lsphp82/bin/phpize
+/usr/local/lsws/lsphp82/include/php/*/*
+/usr/local/lsws/lsphp82/lib/php/build/*
+/usr/local/lsws/lsphp82/share/man/man1/php-config@PHP_VERSION@.1
+/usr/local/lsws/lsphp82/share/man/man1/phpize@PHP_VERSION@.1

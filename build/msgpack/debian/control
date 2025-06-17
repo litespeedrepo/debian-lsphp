@@ -1,16 +1,16 @@
-Source: lsphp83-msgpack
+Source: lsphp82-msgpack
 Section: php
 Priority: optional
 Maintainer: litespeed <info@litespeedtech.com>
 Uploaders: litespeed <info@litespeedtech.com>
 Build-Depends: debhelper (>= 9),
-               lsphp83-dev
+               lsphp82-dev
 Standards-Version: 3.9.8
 Homepage: http://pecl.php.net/package/msgpack
 
-Package: lsphp83-msgpack
+Package: lsphp82-msgpack
 Architecture: any
-Depends: lsphp83-common,
+Depends: lsphp82-common,
          ${misc:Depends},
          ${php:Depends},
          ${shlibs:Depends}

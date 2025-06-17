@@ -1,3 +1,0 @@
-lsphp83-common: non-standard-dir-perm /var/lib/lsphp83/sessions/ 1733 != 0755
-lsphp83-common: package-contains-empty-directory /usr/local/lsws/lsphp83/lib/php/8.3/libexec/
-lsphp83-common: missing-dependency-on-phpapi

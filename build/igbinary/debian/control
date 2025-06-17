@@ -1,16 +1,16 @@
-Source: lsphp83-igbinary
+Source: lsphp82-igbinary
 Section: php
 Priority: optional
 Maintainer: litespeed <info@litespeedtech.com>
 Uploaders: litespeed <info@litespeedtech.com>
 Build-Depends: debhelper (>= 9),
-               lsphp83-dev,
-               lsphp83-apcu
+               lsphp82-dev,
+               lsphp82-apcu
 Standards-Version: 3.9.8
 
-Package: lsphp83-igbinary
+Package: lsphp82-igbinary
 Architecture: any
-Depends: lsphp83-common,
+Depends: lsphp82-common,
          ${misc:Depends},
          ${php:Depends},
          ${shlibs:Depends}
