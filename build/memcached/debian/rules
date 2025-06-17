@@ -15,9 +15,9 @@ export DH_VERBOSE = 1
 #export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
 
 PACKAGE_NAME      := memcached
-PHP_VERSION       := 83
-PHP_DOT_VERSION   := 8.3
-PHP_DATE          := 20230831
+PHP_VERSION       := 82
+PHP_DOT_VERSION   := 8.2
+PHP_DATE          := 20220829
 PHP_DIR           := /usr/local/lsws/lsphp$(PHP_VERSION)
 BUILD_ROOT        := $(shell pwd)
 

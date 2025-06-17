@@ -7,7 +7,7 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-PHP_DEFAULT_VERSION := 8.3
+PHP_DEFAULT_VERSION := 8.2
 
 SED=sed
 
