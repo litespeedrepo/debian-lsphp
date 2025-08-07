@@ -38,7 +38,7 @@ on:
           - '"bookworm"'
           - '"bullseye"'
           - '"buster"'
-          - '"noble","jammy","focal","bookworm","bullseye","buster"'
+          - '"noble","jammy","focal","bookworm","bullseye"'
 
 jobs:
   package:
