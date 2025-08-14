@@ -35,6 +35,7 @@ on:
           - '"noble"'
           - '"jammy"'
           - '"focal"'
+          - '"trixie"'
           - '"bookworm"'
           - '"bullseye"'
           - '"buster"'

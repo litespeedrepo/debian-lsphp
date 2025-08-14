@@ -1,4 +1,3 @@
-0003-force_libmysqlclient_r.patch
 0004-qdbm-is-usr_include_qdbm.patch
 0005-fix-buster.patch
 0006-temporary-path-fixes-for-multiarch.patch
