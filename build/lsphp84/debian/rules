@@ -375,7 +375,7 @@ install: prepare-files-stamp
 
 	
 
-	dh_install --list-missing
+	dh_missing --list-missing
 #	dh_install	
 	# shipping duplicate files from other packages is hell for security audits
 #	ln -sf /usr/share/misc/config.guess $(PHPIZE_BUILDDIR)/config.guess
@@ -440,7 +440,7 @@ binary-arch:
 
 binary-indep:
 
-binary: install binary-arch binary-indep
+binary: configure build install binary-arch binary-indep
 
 PCNTL_FUNCTIONS := $(shell < ext/pcntl/php_pcntl.h $(SED) -ne "/^PHP_FUNCTION/ s/PHP_FUNCTION(\(.*\));/\1/;t end;d;:end p" | tr '\n' ',')
 
