@@ -6,7 +6,6 @@ Uploaders: litespeed <info@litespeedtech.com>
 Build-Depends: debhelper (>= 9),
                lsphp84-dev,
                pkg-config,
-               libc-client-dev,
                libssl-dev,
                libkrb5-dev,
                libpam0g-dev
