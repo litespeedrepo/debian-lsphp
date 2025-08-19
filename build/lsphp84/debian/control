@@ -129,7 +129,7 @@ Description: Debug symbols for LSPHP70
 Package: lsphp84-dev
 Depends: autoconf ,
          automake ,
-         libpcre3-dev,
+         libpcre2-dev,
          libssl-dev,
          libtool ,
          lsphp84-common (>= ${source:Version}),
