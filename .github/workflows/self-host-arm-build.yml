@@ -37,7 +37,6 @@ on:
           - '"trixie"'
           - '"bookworm"'
           - '"bullseye"'
-          - '"buster"'
           - '"noble","jammy","focal","bookworm","bullseye"'
 
 jobs:
