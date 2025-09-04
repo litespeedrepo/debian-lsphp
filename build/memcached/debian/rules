@@ -22,7 +22,7 @@ PHP_DIR           := /usr/local/lsws/lsphp$(PHP_VERSION)
 BUILD_ROOT        := $(shell pwd)
 
 %:
-				dh $@
+	dh $@
 
 override_dh_auto_configure:
 	$(PHP_DIR)/bin/phpize
@@ -31,7 +31,7 @@ override_dh_auto_configure:
 		--enable-memcached-json \
 		--enable-memcached-msgpack \
 		--enable-memcached-sasl \
-		$$( if ! grep -qi "trixie" /etc/os-release; then echo "--enable-memcached-igbinary"; fi )
+		--enable-memcached-igbinary
 
 	touch configure-stamp
 

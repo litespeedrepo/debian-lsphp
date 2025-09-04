@@ -22,14 +22,14 @@ PHP_DIR           := /usr/local/lsws/lsphp$(PHP_VERSION)
 BUILD_ROOT        := $(shell pwd)
 
 %:
-				dh $@
+	dh $@
 
 override_dh_auto_configure:
 	$(PHP_DIR)/bin/phpize
 	dh_auto_configure -- \
 	--with-php-config=$(PHP_DIR)/bin/php-config$(PHP_DOT_VERSION) \
 	--enable-redis-lzf \
-	$$( if ! grep -qi "trixie" /etc/os-release; then echo "--enable-redis-igbinary"; fi )
+	--enable-redis-igbinary
 
 	touch configure-stamp
 
