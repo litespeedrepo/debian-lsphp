@@ -47,9 +47,13 @@ override_dh_auto_install:
 	# Copy top-level headers
 	cp -pr igbinary.h php_igbinary.h \
 	   debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/
-	# Copy full src/php7 headers (this contains the real function definitions)
-	cp -pr src/php7/* \
-	   debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/src/php7/
+
+	# Copy only the real public headers from src/php7
+	cp -pr src/php7/igbinary.h \
+	debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/src/php7/
+
+	cp -pr src/php7/php_igbinary.h \
+	debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/src/php7/
 
 	# Module
 	mkdir -p debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/lib/php/$(PHP_DATE)/
