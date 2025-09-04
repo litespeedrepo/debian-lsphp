@@ -22,32 +22,36 @@ PHP_DIR           := /usr/local/lsws/lsphp$(PHP_VERSION)
 BUILD_ROOT        := $(shell pwd)
 
 %:
-				dh $@
+	dh $@
 
 override_dh_auto_configure:
-				$(PHP_DIR)/bin/phpize
-				dh_auto_configure -- \
-				--with-php-config=$(PHP_DIR)/bin/php-config$(PHP_DOT_VERSION) \
-				--enable-igbinary
+	$(PHP_DIR)/bin/phpize
+	dh_auto_configure -- \
+	--with-php-config=$(PHP_DIR)/bin/php-config$(PHP_DOT_VERSION) \
+	--enable-igbinary
 
-				touch configure-stamp
+	touch configure-stamp
 
 override_dh_auto_test:
 override_dh_usrlocal:
 
 override_dh_auto_install:
-				# INI File
-				mkdir -p debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/etc/php/$(PHP_DOT_VERSION)/mods-available/
-				cp debian/$(PACKAGE_NAME).ini debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/etc/php/$(PHP_DOT_VERSION)/mods-available/40-$(PACKAGE_NAME).ini
+	# INI File
+	mkdir -p debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/etc/php/$(PHP_DOT_VERSION)/mods-available/
+	cp debian/$(PACKAGE_NAME).ini debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/etc/php/$(PHP_DOT_VERSION)/mods-available/40-$(PACKAGE_NAME).ini
 
-				# PHP Header File
-				mkdir -p debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/src/php7/
-				cp -pr igbinary.h debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/
-				cp -pr php_igbinary.h debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/
-				cp -pr igbinary.h debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/src/php7/
-				cp -pr php_igbinary.h debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/src/php7/
+	# PHP Header Files
+	mkdir -p debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/
+	mkdir -p debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/src/php7/
 
-				# Module
-				mkdir -p debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/lib/php/$(PHP_DATE)/
-				cp -pr modules/$(PACKAGE_NAME).so debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/lib/php/$(PHP_DATE)/
-				chmod a+x debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/lib/php/$(PHP_DATE)/$(PACKAGE_NAME).so
+	# Copy top-level headers
+	cp -pr igbinary.h php_igbinary.h \
+	   debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/
+	# Copy full src/php7 headers (this contains the real function definitions)
+	cp -pr src/php7/* \
+	   debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/include/php/ext/$(PACKAGE_NAME)/src/php7/
+
+	# Module
+	mkdir -p debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/lib/php/$(PHP_DATE)/
+	cp -pr modules/$(PACKAGE_NAME).so debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/lib/php/$(PHP_DATE)/
+	chmod a+x debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/lib/php/$(PHP_DATE)/$(PACKAGE_NAME).so
