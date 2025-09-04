@@ -4,6 +4,7 @@ Priority: optional
 Maintainer: litespeed <info@litespeedtech.com>
 Uploaders: litespeed <info@litespeedtech.com>
 Build-Depends: debhelper (>= 9),
+               libc-client-dev,
                lsphp84-dev,
                pkg-config,
                libssl-dev,
