@@ -1,1 +1,3 @@
 wget -q -O - https://repo-dev.litespeedtech.com/debian/enable_dev_repo.sh | bash
+echo "deb http://deb.debian.org/debian sid main contrib non-free non-free-firmware" | tee -a /etc/apt/sources.list
+apt update
