@@ -34,10 +34,10 @@ on:
           - '"noble"'
           - '"jammy"'
           - '"focal"'
+          - '"trixie"'
           - '"bookworm"'
           - '"bullseye"'
-          - '"buster"'
-          - '"noble","jammy","focal","bookworm","bullseye"'
+          - '"noble","jammy","focal","trixie","bookworm","bullseye"'
 
 jobs:
   package:
