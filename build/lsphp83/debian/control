@@ -128,7 +128,7 @@ Description: Debug symbols for LSPHP70
 Package: lsphp83-dev
 Depends: autoconf ,
          automake ,
-         libpcre3-dev,
+         libpcre2-dev,
          libssl-dev,
          libtool ,
          lsphp83-common (>= ${source:Version}),

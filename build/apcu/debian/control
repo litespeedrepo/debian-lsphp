@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: litespeed <info@litespeedtech.com>
 Uploaders: litespeed <info@litespeedtech.com>
 Build-Depends: debhelper (>= 9),
-               libpcre3-dev,
+               libpcre2-dev,
                lsphp83-dev
 Standards-Version: 3.9.8
 Homepage: https://pecl.php.net/package/APCu
