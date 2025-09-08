@@ -5,69 +5,68 @@ Maintainer: Debian PHP Maintainers <pkg-php-maint@lists.alioth.debian.org>
 Uploaders: Ondřej Surý <ondrej@debian.org>,
            Thijs Kinkhorst <thijs@debian.org>,
            Lior Kaplan <kaplan@debian.org>
-Build-Depends: autoconf (>= 2.59),
-               automake (>= 1.11) | automake1.11,
+Build-Depends: autoconf (>= 2.63),
+               automake,
+               libonig-dev,
                bison,
-               chrpath,
-               debhelper,
-               dpkg-dev, 
+               debhelper (>= 9.20160709~),
+               default-libmysqlclient-dev | libmysqlclient-dev,
+               dh-apache2,
+               dpkg-dev (>= 1.16.1~),
+               firebird-dev [!hurd-any !m68k !hppa !ppc64] | firebird2.5-dev [!hurd-any !m68k !hppa !ppc64] | firebird2.1-dev [!hurd-any !m68k !hppa !ppc64],
                flex,
                freetds-dev,
-               libapparmor-dev,
-               libapr1-dev,
+               libacl1-dev,
+               libapparmor-dev [linux-any],
+               libapr1-dev (>= 1.2.7-8),
                libargon2-dev | libargon2-0-dev,
                libbz2-dev,
-               libc-client-dev,
                libcurl4-openssl-dev | libcurl-dev,
                libdb-dev,
-               libedit-dev,
-               libenchant-dev | libenchant-2-dev,
-               libevent-dev,
-               libexpat1-dev,
+               libedit-dev (>= 2.11-20080614-4),
+               libenchant-2-dev | libenchant-dev,
+               libevent-dev (>= 1.4.11),
+               libexpat1-dev (>= 1.95.2-2.1),
+               libffi-dev,
                libfreetype6-dev,
-               libgcrypt11-dev | libgcrypt20-dev,
-               libgd-dev | libgd2-dev,
+               libgcrypt20-dev (>> 1.6.3) | libgcrypt11-dev (<< 1.5.4),
+               libgd-dev (>= 2.1.0) | libgd2-dev,
                libglib2.0-dev,
-               libgmp3-dev,
-               libicu-dev,
+               libgmp-dev,
+               libicu-dev (>= 50.1),
                libjpeg-dev | libjpeg62-dev,
                libkrb5-dev,
                libldap2-dev,
+               liblmdb-dev,
                libmagic-dev,
-               libmcrypt-dev,
-               libmhash-dev,
-               libonig-dev,
                libpam0g-dev,
-               libpcre3-dev,
-               libpng-dev | libpng12-dev,
-               libwebp-dev,
-               libpq-dev,
+               libpcre2-dev (>= 10.30),
+               libpng-dev,
+               libpq-dev (>= 10.0),
                libpspell-dev,
-               libqdbm-dev,
-               librecode-dev,
                libsasl2-dev,
                libsnmp-dev,
                libsodium-dev,
-               libsqlite3-dev,
-               libssl-dev,
-               libtidy-dev,
-               libtool,
-               libvpx-dev,
+               libsqlite3-dev (>= 3.7.7),
+               libssl-dev (>= 1.1.1),
+               libsystemd-dev [linux-any],
+               libtidy-dev (>= 1:5.2.0),
+               libtool (>= 2.2),
+               libwebp-dev,
                libwrap0-dev,
-               libxml2-dev,
-               libxmlrpc-core-c3-dev,
-               libxmltok1-dev,
-               libxslt1-dev,
-               libzip-dev,
+               libxml2-dev (>= 2.9.4),
+               libxslt1-dev (>= 1.0.18),
+               libzip-dev (>= 1.0.0),
                locales-all | language-pack-de,
                netbase,
-               netcat-traditional,
+               netcat-openbsd,
                re2c,
-               systemtap-sdt-dev [amd64 i386 powerpc armel armhf ia64],
+               systemtap-sdt-dev,
                tzdata,
                unixodbc-dev,
-               zlib1g-dev,
-               libbz2-dev
+               zlib1g-dev (>= 1.2.11),
+               libaspell-dev,
+               libc-client2007e-dev
 Build-Conflicts: bind-dev
 Standards-Version: 3.9.6
 Vcs-Git: git://anonscm.debian.org/pkg-php/php.git
@@ -129,7 +128,7 @@ Description: Debug symbols for LSPHP70
 Package: lsphp82-dev
 Depends: autoconf ,
          automake ,
-         libpcre3-dev,
+         libpcre2-dev,
          libssl-dev,
          libtool ,
          lsphp82-common (>= ${source:Version}),
@@ -331,6 +330,22 @@ Pre-Depends: ${misc:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Description: CURL module for PHP
  This package provides a CURL module for PHP.
+ .
+ PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
+ open source general-purpose scripting language that is especially suited
+ for web development and can be embedded into HTML.
+
+Package: lsphp84-opcache
+Architecture: any
+Depends: lsphp84-common,
+         ucf,
+         ${misc:Depends},
+         ${php:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends}
+Built-Using: ${php:Built-Using}
+Description: Zend OpCache module for PHP
+ This package provides the Zend OpCache module(s) for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
