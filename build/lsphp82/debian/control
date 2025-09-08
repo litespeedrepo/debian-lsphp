@@ -335,9 +335,9 @@ Description: CURL module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: lsphp84-opcache
+Package: lsphp82-opcache
 Architecture: any
-Depends: lsphp84-common,
+Depends: lsphp82-common,
          ucf,
          ${misc:Depends},
          ${php:Depends},
