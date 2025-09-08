@@ -11,10 +11,10 @@ https://gist.github.com/jelly/96847934239aac19c512c54ca65d6baa
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/ext/phar/phar.c b/ext/phar/phar.c
-index b501429..40500f7 100644
+index 7650478..f807094 100644
 --- a/ext/phar/phar.c
 +++ b/ext/phar/phar.c
-@@ -2959,7 +2959,7 @@ void phar_flush_ex(phar_archive_data *phar, zend_string *user_stub, bool is_defa
+@@ -2965,7 +2965,7 @@ void phar_flush_ex(phar_archive_data *phar, zend_string *user_stub, bool is_defa
  			4: metadata-len
  			+: metadata
  		*/

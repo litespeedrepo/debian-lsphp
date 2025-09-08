@@ -7,7 +7,7 @@ Subject: Disable assembly detection in Zend arithmetic with gcc < 5
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/Zend/zend_operators.h b/Zend/zend_operators.h
-index f8c901b..025d52b 100644
+index 6a3d54a..057f911 100644
 --- a/Zend/zend_operators.h
 +++ b/Zend/zend_operators.h
 @@ -528,7 +528,7 @@ ZEND_API void zend_reset_lc_ctype_locale(void);
@@ -37,7 +37,7 @@ index f8c901b..025d52b 100644
  	__asm__ goto(
  		"movl	(%1), %%eax\n\t"
  		"addl   (%2), %%eax\n\t"
-@@ -742,7 +742,7 @@ overflow: ZEND_ATTRIBUTE_COLD_LABEL
+@@ -744,7 +744,7 @@ overflow: ZEND_ATTRIBUTE_COLD_LABEL
  
  static zend_always_inline void fast_long_sub_function(zval *result, zval *op1, zval *op2)
  {

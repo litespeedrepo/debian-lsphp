@@ -7,10 +7,10 @@ Subject: Disable avx detection with gcc < 6
  1 file changed, 13 insertions(+), 4 deletions(-)
 
 diff --git a/Zend/zend_cpuinfo.h b/Zend/zend_cpuinfo.h
-index c81865c..620730d 100644
+index 7e53ba6..7e4a076 100644
 --- a/Zend/zend_cpuinfo.h
 +++ b/Zend/zend_cpuinfo.h
-@@ -187,9 +187,14 @@ static inline int zend_cpu_supports_avx512(void) {
+@@ -215,9 +215,14 @@ static inline int zend_cpu_supports_avx512(void) {
  #ifdef PHP_HAVE_BUILTIN_CPU_INIT
  	__builtin_cpu_init();
  #endif
@@ -28,7 +28,7 @@ index c81865c..620730d 100644
  }
  #endif
  
-@@ -199,7 +204,11 @@ static inline int zend_cpu_supports_avx512_vbmi(void) {
+@@ -227,7 +232,11 @@ static inline int zend_cpu_supports_avx512_vbmi(void) {
  #ifdef PHP_HAVE_BUILTIN_CPU_INIT
  	__builtin_cpu_init();
  #endif
