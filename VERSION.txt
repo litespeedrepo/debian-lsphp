@@ -1,9 +1,9 @@
 lsphp=8.1.33
-apcu=5.1.24
+apcu=5.1.27
 imagick=3.8.0
 ioncube=14.4.0
 msgpack=3.0.0
-memcached=3.2.0
+memcached=3.3.0
 pear=1.10.15
 redis=6.2.0
 igbinary=3.2.16

@@ -22,29 +22,29 @@ PHP_DIR           := /usr/local/lsws/lsphp$(PHP_VERSION)
 BUILD_ROOT        := $(shell pwd)
 
 %:
-				dh $@
+	dh $@
 
 override_dh_auto_configure:
-				chmod a+x ioncube_loader_lin_$(PHP_DOT_VERSION).so
+	chmod a+x ioncube_loader_lin_$(PHP_DOT_VERSION).so
 override_dh_usrlocal:
 
 override_dh_auto_install:
-				mkdir -p ioncube/
+	mkdir -p ioncube/
 
-				# INI File
-				mkdir -p debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/etc/php/$(PHP_DOT_VERSION)/mods-available/
-				cp debian/01-$(PACKAGE_NAME).ini debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/etc/php/$(PHP_DOT_VERSION)/mods-available/01-$(PACKAGE_NAME).ini
+	# INI File
+	mkdir -p debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/etc/php/$(PHP_DOT_VERSION)/mods-available/
+	cp debian/01-$(PACKAGE_NAME).ini debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/etc/php/$(PHP_DOT_VERSION)/mods-available/01-$(PACKAGE_NAME).ini
 
-				# Share Files
-				mkdir -p debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/share/licenses/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)
-				mkdir -p debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/share/doc/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)
-				cp -pr LICENSE.txt debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/share/licenses/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)
-				cp -pr USER-GUIDE.txt debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/share/doc/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)
+	# Share Files
+	mkdir -p debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/share/licenses/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)
+	mkdir -p debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/share/doc/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)
+	cp -pr LICENSE.txt debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/share/licenses/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)
+	cp -pr USER-GUIDE.txt debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/share/doc/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)
 
-				# Module
-				mkdir -p debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/lib/php/$(PHP_DATE)/
-				cp -pr ioncube_loader_lin_$(PHP_DOT_VERSION).so debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/lib/php/$(PHP_DATE)/$(PACKAGE_NAME).so
-				chmod a+x debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/lib/php/$(PHP_DATE)/$(PACKAGE_NAME).so
+	# Module
+	mkdir -p debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/lib/php/$(PHP_DATE)/
+	cp -pr ioncube_loader_lin_$(PHP_DOT_VERSION).so debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/lib/php/$(PHP_DATE)/$(PACKAGE_NAME).so
+	chmod a+x debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)/usr/local/lsws/lsphp$(PHP_VERSION)/lib/php/$(PHP_DATE)/$(PACKAGE_NAME).so
 
 override_dh_auto_test:
-				$(PHP_DIR)/bin/php --no-php-ini --define zend_extension=$(BUILD_ROOT)/ioncube_loader_lin_$(PHP_DOT_VERSION).so --version | grep 'ionCube.*'
+	$(PHP_DIR)/bin/php --no-php-ini --define zend_extension=$(BUILD_ROOT)/ioncube_loader_lin_$(PHP_DOT_VERSION).so --version | grep 'ionCube.*'

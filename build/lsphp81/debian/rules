@@ -292,7 +292,9 @@ build-indep: build
 install: prepare-files-stamp 
 	
 	dh_installdirs -v
-	
+	if [ ! -f Makefile ]; then \
+		./configure ${litespeed_config}; \
+	fi	
 	make install INSTALL_ROOT=$(CURDIR)/debian/tmp
 
 	# get rid of dreaded libtool files
