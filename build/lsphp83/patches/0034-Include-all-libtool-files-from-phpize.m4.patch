@@ -7,7 +7,7 @@ Subject: Include all libtool files from phpize.m4
  1 file changed, 4 insertions(+)
 
 diff --git a/scripts/phpize.m4 b/scripts/phpize.m4
-index be7065b..6fb4f33 100644
+index b713dcc..99d3843 100644
 --- a/scripts/phpize.m4
 +++ b/scripts/phpize.m4
 @@ -5,6 +5,10 @@ dnl comments starting with # and empty newlines from the included files.

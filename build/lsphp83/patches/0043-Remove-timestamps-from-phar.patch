@@ -11,10 +11,10 @@ https://gist.github.com/jelly/96847934239aac19c512c54ca65d6baa
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/ext/phar/phar.c b/ext/phar/phar.c
-index b501429..40500f7 100644
+index ab54608..3d231d4 100644
 --- a/ext/phar/phar.c
 +++ b/ext/phar/phar.c
-@@ -2959,7 +2959,7 @@ void phar_flush_ex(phar_archive_data *phar, zend_string *user_stub, bool is_defa
+@@ -3002,7 +3002,7 @@ int phar_flush(phar_archive_data *phar, char *user_stub, zend_long len, int conv
  			4: metadata-len
  			+: metadata
  		*/
@@ -24,10 +24,10 @@ index b501429..40500f7 100644
  		phar_set_32(entry_buffer+4, mytime);
  		phar_set_32(entry_buffer+8, entry->compressed_filesize);
 diff --git a/ext/phar/util.c b/ext/phar/util.c
-index e49e15a..91dd417 100644
+index 04efe89..416bcd8 100644
 --- a/ext/phar/util.c
 +++ b/ext/phar/util.c
-@@ -701,7 +701,7 @@ phar_entry_data *phar_get_or_create_entry_data(char *fname, size_t fname_len, ch
+@@ -584,7 +584,7 @@ phar_entry_data *phar_get_or_create_entry_data(char *fname, size_t fname_len, ch
  
  	phar_add_virtual_dirs(phar, path, path_len);
  	etemp.is_modified = 1;

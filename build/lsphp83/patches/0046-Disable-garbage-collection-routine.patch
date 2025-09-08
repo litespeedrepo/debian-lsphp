@@ -17,10 +17,10 @@ Last-Update: 2024-01-19
  2 files changed, 12 insertions(+), 2 deletions(-)
 
 diff --git a/php.ini-development b/php.ini-development
-index 6509686..ef35f3e 100644
+index b1f398e..943d11f 100644
 --- a/php.ini-development
 +++ b/php.ini-development
-@@ -1362,7 +1362,12 @@ session.serialize_handler = php
+@@ -1452,7 +1452,12 @@ session.serialize_handler = php
  ; Development Value: 1
  ; Production Value: 1
  ; https://php.net/session.gc-probability
@@ -35,10 +35,10 @@ index 6509686..ef35f3e 100644
  ; Defines the probability that the 'garbage collection' process is started on every
  ; session initialization. The probability is calculated by using gc_probability/gc_divisor,
 diff --git a/php.ini-production b/php.ini-production
-index e0c83c8..d0ef58b 100644
+index e190e44..10843b7 100644
 --- a/php.ini-production
 +++ b/php.ini-production
-@@ -1358,7 +1358,12 @@ session.serialize_handler = php
+@@ -1448,7 +1448,12 @@ session.serialize_handler = php
  ; Development Value: 1
  ; Production Value: 1
  ; https://php.net/session.gc-probability
