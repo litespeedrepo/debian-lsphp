@@ -16,7 +16,7 @@ https://tests.reproducible-builds.org/debian/issues/bookworm/paths_vary_due_to_u
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/scripts/php-config.in b/scripts/php-config.in
-index 9e415da..5fb2a92 100644
+index 45a0759..05307ee 100644
 --- a/scripts/php-config.in
 +++ b/scripts/php-config.in
 @@ -1,6 +1,6 @@
@@ -28,7 +28,7 @@ index 9e415da..5fb2a92 100644
  datarootdir="@datarootdir@"
  exec_prefix="@exec_prefix@"
 diff --git a/scripts/phpize.in b/scripts/phpize.in
-index 66086aa..a7c9f9d 100644
+index 0dcfe21..0d71e79 100644
 --- a/scripts/phpize.in
 +++ b/scripts/phpize.in
 @@ -7,7 +7,7 @@ exec_prefix="`eval echo @exec_prefix@`"
