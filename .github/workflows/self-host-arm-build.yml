@@ -49,8 +49,8 @@ jobs:
       package: ${{ fromJSON('[' + inputs.package + ']') }}
       distro: ${{ fromJSON('[' + inputs.distro + ']') }}
       exclude:
-        - package: "pear"
-          distro: "trixie"
+        - package: pear
+          distro: trixie
       max-parallel: 1
     steps:
       - uses: actions/checkout@v3
