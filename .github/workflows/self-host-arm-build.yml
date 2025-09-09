@@ -50,17 +50,16 @@ jobs:
         distro: ${{ fromJSON(format('[{0}]', inputs.distro)) }}
       fail-fast: true
       max-parallel: 1
+      exclude:
+        - package: "pear"
+          distro: "trixie"
     steps:
       - uses: actions/checkout@v3
       - name: build with ${{ github.head_ref || github.ref_name }} branch
         run: |
             cp /root/.pbuilderrc $HOME/
             cp D05deps $HOME/
-            cp B92test-pkg $HOME/
-            if [[ "${{ matrix.package }}" == "pear" && "${{ matrix.distro }}" == "trixie" ]]; then
-              echo "Skipping PEAR build for trixie"
-              exit 0
-            fi            
+            cp B92test-pkg $HOME/       
             bash build.sh ${{ matrix.package }} ${{ matrix.distro }} arm64 --push
         env:
           BUILD_KEY: ${{ secrets.BUILD_KEY }}
