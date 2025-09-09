@@ -59,6 +59,10 @@ jobs:
             cp /root/.pbuilderrc $HOME/
             cp D05deps $HOME/
             cp B92test-pkg $HOME/
+            if [[ "${{ matrix.package }}" == "pear" && "${{ matrix.distro }}" == "trixie" ]]; then
+              echo "Skipping PEAR build for trixie"
+              exit 0
+            fi       
             bash build.sh ${{ matrix.package }} ${{ matrix.distro }} amd64 --push
         env:
           BUILD_KEY: ${{ secrets.BUILD_KEY }}
