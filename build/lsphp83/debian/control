@@ -66,7 +66,6 @@ Build-Depends: autoconf (>= 2.63),
                unixodbc-dev,
                zlib1g-dev (>= 1.2.11),
                libaspell-dev,
-               libc-client2007e-dev
 Build-Conflicts: bind-dev
 Standards-Version: 3.9.6
 Vcs-Git: git://anonscm.debian.org/pkg-php/php.git
