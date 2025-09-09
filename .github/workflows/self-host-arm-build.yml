@@ -46,11 +46,9 @@ jobs:
       options: --user root --cap-add SYS_ADMIN --security-opt seccomp=unconfined --security-opt apparmor=unconfined
     strategy:
       matrix:
-      package: ${{ fromJSON('[' + inputs.package + ']') }}
-      distro: ${{ fromJSON('[' + inputs.distro + ']') }}
-      exclude:
-        - package: pear
-          distro: trixie
+        package: ${{ fromJSON(format('[{0}]', inputs.package)) }}
+        distro: ${{ fromJSON(format('[{0}]', inputs.distro)) }}
+      fail-fast: true
       max-parallel: 1
     steps:
       - uses: actions/checkout@v3
