@@ -21,6 +21,7 @@ Build-Depends: autoconf (>= 2.63),
                libapr1-dev (>= 1.2.7-8),
                libargon2-dev | libargon2-0-dev,
                libbz2-dev,
+               libc-client-dev | net-tools,
                libcurl4-openssl-dev | libcurl-dev,
                libdb-dev,
                libedit-dev (>= 2.11-20080614-4),
@@ -65,8 +66,7 @@ Build-Depends: autoconf (>= 2.63),
                tzdata,
                unixodbc-dev,
                zlib1g-dev (>= 1.2.11),
-               libaspell-dev,
-               libc-client2007e-dev
+               libaspell-dev
 Build-Conflicts: bind-dev
 Standards-Version: 3.9.6
 Vcs-Git: git://anonscm.debian.org/pkg-php/php.git

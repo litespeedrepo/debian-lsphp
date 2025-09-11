@@ -1,8 +1,13 @@
-ext_PACKAGES     += imap
-imap_DESCRIPTION := IMAP
-imap_EXTENSIONS  := imap
-imap_config      := --with-imap=shared,/usr \
-	            --with-kerberos \
-	            --with-imap-ssl=yes
-export imap_EXTENSIONS
-export imap_DESCRIPTION
+ifeq ($(shell . /etc/os-release; echo $$VERSION_CODENAME),trixie)
+  # Disable IMAP on trixie
+  $(info *** Skipping IMAP extension on trixie ***)
+else
+  ext_PACKAGES     += imap
+  imap_DESCRIPTION := IMAP
+  imap_EXTENSIONS  := imap
+  imap_config      := --with-imap=shared,/usr \
+                       --with-kerberos \
+                       --with-imap-ssl=yes
+  export imap_EXTENSIONS
+  export imap_DESCRIPTION
+endif

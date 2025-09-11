@@ -3,6 +3,11 @@
 # Uncomment this to turn on verbose mode. 
 export DH_VERBOSE=1
 
+CODENAME := $(shell . /etc/os-release; echo $$VERSION_CODENAME)
+ifeq ($(CODENAME),trixie)
+export DH_OPTIONS=-Nlsphp81-imap
+endif
+
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
