@@ -9,6 +9,7 @@ on:
         type: choice
         options:
           - '"lsphp"'
+          - '"imap"'
           - '"pear"'          
           - '"apcu"'
           - '"imagick"'
@@ -17,7 +18,7 @@ on:
           - '"msgpack"'
           - '"redis"'
           - '"igbinary"'
-          - '"lsphp","pear","apcu","igbinary","imagick","ioncube","msgpack","memcached","redis"'
+          - '"lsphp","imap","pear","apcu","igbinary","imagick","ioncube","msgpack","memcached","redis"'
       version:
         description: 'version number'
         type: number
@@ -48,12 +49,14 @@ jobs:
       matrix:
         package: ${{ fromJSON(format('[{0}]', inputs.package)) }}
         distro: ${{ fromJSON(format('[{0}]', inputs.distro)) }}
+        exclude:
+          - package: imap
+            distro: trixie        
       fail-fast: true
       max-parallel: 1
     steps:
       - uses: actions/checkout@v3
       - name: build with ${{ github.head_ref || github.ref_name }} branch
-        #if: ${{ (github.ref == 'refs/heads/main') }}
         run: |
             cp /root/.pbuilderrc $HOME/
             cp D05deps $HOME/
@@ -63,12 +66,3 @@ jobs:
           BUILD_KEY: ${{ secrets.BUILD_KEY }}
           version: ${{ inputs.version }}
           revision: ${{ inputs.revision }}
-      #- name: build with ${{ github.head_ref || github.ref_name }} branch
-      #  if: ${{ (github.ref != 'refs/heads/main') }}
-      #  run: |
-      #      cp /root/.pbuilderrc $HOME/
-      #      bash build.sh ${{ matrix.package }} ${{ matrix.distro }} amd64 dev yes
-      #  env:
-      #    version: ${{ inputs.version }}
-      #    revision: ${{ inputs.revision }} 
-      #    BUILD_KEY: ${{ secrets.BUILD_KEY }}
