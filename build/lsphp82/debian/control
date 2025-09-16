@@ -21,7 +21,6 @@ Build-Depends: autoconf (>= 2.63),
                libapr1-dev (>= 1.2.7-8),
                libargon2-dev | libargon2-0-dev,
                libbz2-dev,
-               libc-client-dev | net-tools,
                libcurl4-openssl-dev | libcurl-dev,
                libdb-dev,
                libedit-dev (>= 2.11-20080614-4),
@@ -250,22 +249,6 @@ Pre-Depends: ${misc:Pre-Depends}
 Built-Using: ${php:Built-Using}
 Description: PostgreSQL module for PHP
  This package provides a PostgreSQL module for PHP.
- .
- PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
- open source general-purpose scripting language that is especially suited
- for web development and can be embedded into HTML.
-
-Package: lsphp82-imap
-Architecture: any
-Depends: lsphp82-common,
-         ucf,
-         ${misc:Depends},
-         ${php:Depends},
-         ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends}
-Built-Using: ${php:Built-Using}
-Description: IMAP module for PHP
- This package provides a IMAP module for PHP.
  .
  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
  open source general-purpose scripting language that is especially suited
