@@ -254,22 +254,6 @@ Description: PostgreSQL module for PHP
  open source general-purpose scripting language that is especially suited
  for web development and can be embedded into HTML.
 
-Package: lsphp83-imap
-Architecture: any
-Depends: lsphp83-common,
-         ucf,
-         ${misc:Depends},
-         ${php:Depends},
-         ${shlibs:Depends}
-Pre-Depends: ${misc:Pre-Depends}
-Built-Using: ${php:Built-Using}
-Description: IMAP module for PHP
- This package provides a IMAP module for PHP.
- .
- PHP (recursive acronym for PHP: Hypertext Preprocessor) is a widely-used
- open source general-purpose scripting language that is especially suited
- for web development and can be embedded into HTML.
-
 Package: lsphp83-mysql
 Architecture: any
 Depends: lsphp83-common,
