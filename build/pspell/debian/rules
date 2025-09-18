@@ -2,7 +2,7 @@
 
 export DH_VERBOSE = 1
 
-PACKAGE_NAME      := imap
+PACKAGE_NAME      := pspell
 PHP_VERSION       := 84
 PHP_DOT_VERSION   := 8.4
 PHP_DATE          := 20240924
@@ -21,9 +21,7 @@ override_dh_auto_configure:
 	$(PHP_DIR)/bin/phpize; \
 	./configure \
 		--with-php-config=$(PHP_DIR)/bin/php-config$(PHP_DOT_VERSION) \
-		--with-imap=/usr/local/imap-2007 \
-		--with-imap-ssl \
-		--with-kerberos
+		--with-pspell
 	touch configure-stamp
 
 override_dh_auto_test:

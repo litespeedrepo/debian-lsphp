@@ -8,3 +8,4 @@ pear=1.10.15
 redis=6.2.0
 igbinary=3.2.16
 imap=1.0.3
+pspell=1.0.1

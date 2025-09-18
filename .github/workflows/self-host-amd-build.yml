@@ -10,7 +10,8 @@ on:
         type: choice
         options:
           - '"lsphp"'
-          - '"imap"'     
+          - '"imap"' 
+          - '"pspell"'    
           - '"pear"'               
           - '"apcu"'
           - '"igbinary"'          

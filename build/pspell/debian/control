@@ -1,0 +1,23 @@
+Source: lsphp84-pspell
+Section: php
+Priority: optional
+Maintainer: litespeed <info@litespeedtech.com>
+Uploaders: litespeed <info@litespeedtech.com>
+Build-Depends: debhelper (>= 9),
+               lsphp84-dev,
+               pkg-config,
+               libpspell-dev
+Standards-Version: 4.6.2 
+
+Package: lsphp84-pspell
+Architecture: any
+Depends: lsphp84-common,
+         ${misc:Depends},
+         ${php:Depends},
+         ${shlibs:Depends}
+Provides: ${php:Provides}
+Description: This package provides the pspell module(s) for PHP
+ This extension allows you to check the spelling of a word and offer
+ suggestions.
+ .
+ The extension is unbundled from php-src as of PHP 8.4.0.
