@@ -1,5 +1,5 @@
-lsphp#PHP_VERSION#-imap (#VERSION#-#BUILD_REVISION#+#DIST#) #DIST#; urgency=medium
+lsphp#PHP_VERSION#-pspell (#VERSION#-#BUILD_REVISION#+#DIST#) #DIST#; urgency=medium
 
-  * This is build #BUILD_REVISION# of lsphp#PHP_VERSION#-imap version #VERSION#
+  * This is build #BUILD_REVISION# of lsphp#PHP_VERSION#-pspell version #VERSION#
 
  -- lsadm <info@litespeedtech.com>  #DATE# +0100
