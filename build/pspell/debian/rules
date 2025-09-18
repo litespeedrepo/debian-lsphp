@@ -1,0 +1,41 @@
+#!/usr/bin/make -f
+
+export DH_VERBOSE = 1
+
+PACKAGE_NAME      := imap
+PHP_VERSION       := 84
+PHP_DOT_VERSION   := 8.4
+PHP_DATE          := 20240924
+PHP_DIR           := /usr/local/lsws/lsphp$(PHP_VERSION)
+PKG_DESTDIR       := debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)
+MODS_AVAILABLE    := $(PKG_DESTDIR)$(PHP_DIR)/etc/php/$(PHP_DOT_VERSION)/mods-available
+MODULE_DIR        := $(PKG_DESTDIR)$(PHP_DIR)/lib/php/$(PHP_DATE)
+BUILD_ROOT        := $(shell pwd)
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	set -x; \
+	cd $(BUILD_ROOT); \
+	$(PHP_DIR)/bin/phpize; \
+	./configure \
+		--with-php-config=$(PHP_DIR)/bin/php-config$(PHP_DOT_VERSION) \
+		--with-imap=/usr/local/imap-2007 \
+		--with-imap-ssl \
+		--with-kerberos
+	touch configure-stamp
+
+override_dh_auto_test:
+override_dh_usrlocal:
+
+override_dh_auto_install:
+	install -Dm644 debian/$(PACKAGE_NAME).ini \
+		$(MODS_AVAILABLE)/50-$(PACKAGE_NAME).ini
+
+	install -Dm755 modules/$(PACKAGE_NAME).so \
+		$(MODULE_DIR)/$(PACKAGE_NAME).so
+
+override_dh_clean:
+	dh_clean
+	rm -f configure-stamp	
