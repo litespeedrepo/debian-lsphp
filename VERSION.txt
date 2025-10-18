@@ -8,3 +8,4 @@ memcached=3.4.0
 msgpack=3.0.0
 pear=1.10.16
 redis=6.2.0
+pspell=1.0.1
