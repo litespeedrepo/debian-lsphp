@@ -3,7 +3,7 @@ name: Auto-trigger build on version bump
 on:
   push:
     branches:
-      - php83
+      - php
     paths:
       - VERSION.txt
 
