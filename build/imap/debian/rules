@@ -3,9 +3,9 @@
 export DH_VERBOSE = 1
 
 PACKAGE_NAME      := imap
-PHP_VERSION       := 84
-PHP_DOT_VERSION   := 8.4
-PHP_DATE          := 20240924
+PHP_VERSION       := 85
+PHP_DOT_VERSION   := 8.5
+PHP_DATE          := 20251120
 PHP_DIR           := /usr/local/lsws/lsphp$(PHP_VERSION)
 PKG_DESTDIR       := debian/lsphp$(PHP_VERSION)-$(PACKAGE_NAME)
 MODS_AVAILABLE    := $(PKG_DESTDIR)$(PHP_DIR)/etc/php/$(PHP_DOT_VERSION)/mods-available

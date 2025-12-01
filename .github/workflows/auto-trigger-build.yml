@@ -3,7 +3,8 @@ name: Auto-trigger build on version bump
 on:
   push:
     branches:
-      - php84
+      #- php85
+      - phptest
     paths:
       - VERSION.txt
 

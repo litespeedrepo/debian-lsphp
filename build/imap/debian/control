@@ -1,20 +1,20 @@
-Source: lsphp84-imap
+Source: lsphp85-imap
 Section: php
 Priority: optional
 Maintainer: litespeed <info@litespeedtech.com>
 Uploaders: litespeed <info@litespeedtech.com>
 Build-Depends: debhelper (>= 9),
                libc-client2007e-dev,
-               lsphp84-dev,
+               lsphp85-dev,
                pkg-config,
                libssl-dev,
                libkrb5-dev,
                libpam0g-dev
 Standards-Version: 4.6.2 
 
-Package: lsphp84-imap
+Package: lsphp85-imap
 Architecture: any
-Depends: lsphp84-common,
+Depends: lsphp85-common,
          ${misc:Depends},
          ${php:Depends},
          ${shlibs:Depends}

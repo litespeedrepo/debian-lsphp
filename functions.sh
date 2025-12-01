@@ -63,12 +63,12 @@ set_build_dir(){
 prepare_source(){
     cd $BUILD_DIR
     case "$product" in
-    lsphp84)
+    lsphp85)
         source_url="http://us2.php.net/distributions/php-$version.tar.gz"
         wget $source_url
         tar xzf php-$version.tar.gz
 
-        source_folder_name=php8.4-$version
+        source_folder_name=php8.5-$version
         mv php-$version $source_folder_name
 
         SOURCE_DIR=$BUILD_DIR/$source_folder_name
@@ -90,7 +90,7 @@ prepare_source(){
 
         cd ..
         #prepare the patched source as orig.tar.xz file
-        tar -cJf php8.4_${version}.orig.tar.xz ${source_folder_name}
+        tar -cJf php8.5_${version}.orig.tar.xz ${source_folder_name}
         ;;
     lsphp${PHP_VERSION_NUMBER}-${PHP_EXTENSION})
         if [ ${PHP_EXTENSION} == 'ioncube' ] ; then
@@ -204,7 +204,9 @@ pbuild_packages(){
               elif [[ "${PHP_VERSION_NUMBER}" == '83' ]]; then
                   PHP_VERSION_DATE='20230831'                  
               elif [[ "${PHP_VERSION_NUMBER}" == '84' ]]; then
-                  PHP_VERSION_DATE='20240924'                  
+                  PHP_VERSION_DATE='20240924'       
+              elif [[ "${PHP_VERSION_NUMBER}" == '85' ]]; then
+                  PHP_VERSION_DATE='20251120'                               
               fi
           fi          
           cp -a ${PRODUCT_DIR}${TAIL_EDGE}/debian $SOURCE_DIR/

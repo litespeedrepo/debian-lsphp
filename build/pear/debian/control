@@ -1,22 +1,22 @@
-Source: lsphp84-pear
+Source: lsphp85-pear
 Section: php
 Priority: optional
 Maintainer: litespeed <info@litespeedtech.com>
 Uploaders: litespeed <info@litespeedtech.com>
 Build-Depends: debhelper (>= 9),
-	             lsphp84
+	             lsphp85
 Standards-Version: 3.9.8
 
-Package: lsphp84-pear
+Package: lsphp85-pear
 Architecture: all
 Depends: ${misc:Depends},
          ${phppear:Debian-Depends},
-         lsphp84,
-         lsphp84-dev
+         lsphp85,
+         lsphp85-dev
 Recommends: ${phppear:Debian-Recommends}
-Provides: lsphp84-console-getopt,
-          lsphp84-structures-graph,
-          lsphp84-xml-util
+Provides: lsphp85-console-getopt,
+          lsphp85-structures-graph,
+          lsphp85-xml-util
 Breaks: ${phppear:Debian-Breaks}
 Description: Provides PHP PEAR package
  PEAR is a framework and distribution system for reusable PHP components.

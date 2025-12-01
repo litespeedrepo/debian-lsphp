@@ -15,9 +15,9 @@ export DH_VERBOSE = 1
 #export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
 
 PACKAGE_NAME      := apcu
-PHP_VERSION       := 84
-PHP_DOT_VERSION   := 8.4
-PHP_DATE          := 20240924
+PHP_VERSION       := 85
+PHP_DOT_VERSION   := 8.5
+PHP_DATE          := 20251120
 PHP_DIR           := /usr/local/lsws/lsphp$(PHP_VERSION)
 BUILD_ROOT        := $(shell pwd)
 
