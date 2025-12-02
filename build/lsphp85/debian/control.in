@@ -75,7 +75,6 @@ Package: lsphp85
 Architecture: any
 Depends: libmagic1,
          lsphp85-common (>= ${source:Version}),
-         lsphp85-opcache,
          tzdata,
          ucf,
          ${misc:Depends},
