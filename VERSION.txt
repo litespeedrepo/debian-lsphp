@@ -1,6 +1,6 @@
 apcu=5.1.27
 igbinary=3.2.16
-imagick=3.8.0
+imagick=3.8.1
 imap=1.0.3
 ioncube=15.0.0
 lsphp=8.4.15
