@@ -1,8 +1,3 @@
-Description: Replace removed php_smart_string.h with zend_smart_string.h for lsphp85
-Author: Your Name
-Forwarded: not-needed
-Last-Update: 2025-12-04
-
 --- a/src/php7/php_igbinary.h
 +++ b/src/php7/php_igbinary.h
 @@ -34,7 +34,7 @@
