@@ -17,7 +17,7 @@ export DH_VERBOSE = 1
 PACKAGE_NAME      := igbinary
 PHP_VERSION       := 85
 PHP_DOT_VERSION   := 8.5
-PHP_DATE          := 20251120
+PHP_DATE          := 20250925
 PHP_DIR           := /usr/local/lsws/lsphp$(PHP_VERSION)
 BUILD_ROOT        := $(shell pwd)
 
