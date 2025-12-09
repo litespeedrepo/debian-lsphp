@@ -20,8 +20,8 @@ on:
           - '"msgpack"'          
           - '"memcached"'
           - '"redis"'
-          - '"lsphp","imap","pear","apcu","igbinary","imagick","msgpack","memcached","redis"'
-          - '"imap","pear","apcu","igbinary","imagick","msgpack","memcached","redis"'
+          - '"lsphp","imap","pspell","pear","apcu","igbinary","imagick","msgpack","memcached","redis"'
+          - '"imap","pear","pspell","apcu","igbinary","imagick","msgpack","memcached","redis"'
       version:
         description: 'version number'
         type: number
