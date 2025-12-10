@@ -1,4 +1,4 @@
-apcu=5.1.27
+apcu=5.1.28
 igbinary=3.2.16
 imagick=3.8.1
 ioncube=15.0.0
