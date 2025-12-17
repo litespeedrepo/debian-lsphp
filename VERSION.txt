@@ -1,10 +1,9 @@
-apcu=5.1.27
+apcu=5.1.28
 igbinary=3.2.16
 imagick=3.8.1
 imap=1.0.3
 lsphp=8.5.0
 memcached=3.4.0
 msgpack=3.0.0
-pear=1.10.16
+pear=1.10.17
 redis=6.3.0
-pspell=1.0.1
