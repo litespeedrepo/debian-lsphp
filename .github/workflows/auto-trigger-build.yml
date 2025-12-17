@@ -108,5 +108,4 @@ jobs:
               -f package="\"$PKG\"" \
               -f distro="$DISTROS" \
               || echo "Failed to trigger $PKG"
-            sleep 1500  
           done
