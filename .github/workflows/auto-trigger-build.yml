@@ -7,6 +7,10 @@ on:
     paths:
       - VERSION.txt
 
+concurrency:
+  group: build-queue
+  cancel-in-progress: false
+
 jobs:
   detect-and-trigger:
     runs-on: ubuntu-latest
@@ -104,5 +108,4 @@ jobs:
               -f package="\"$PKG\"" \
               -f distro="$DISTROS" \
               || echo "Failed to trigger $PKG"
-            sleep 1500  
           done
