@@ -1,9 +1,5 @@
 name: self-host-amd64-build
 
-concurrency:
-  group: build-queue
-  cancel-in-progress: false
-
 on:
   workflow_dispatch:
     inputs:
@@ -45,6 +41,9 @@ on:
 
 jobs:
   package:
+    concurrency:
+      group: build-queue
+      cancel-in-progress: false  
     runs-on: [self-hosted, linux, x64]
     container:
       image: eggcold/debian-build
