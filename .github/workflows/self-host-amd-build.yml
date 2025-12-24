@@ -43,7 +43,7 @@ jobs:
   package:
     runs-on: [self-hosted, linux, x64]
     container:
-      image: eggcold/debian-build
+      image: eggcold/debian-build:4
       options: --user root --cap-add SYS_ADMIN --security-opt seccomp=unconfined --security-opt apparmor=unconfined
     strategy:
       matrix:
