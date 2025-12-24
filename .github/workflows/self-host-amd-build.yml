@@ -1,9 +1,5 @@
 name: self-host-amd64-build
 
-concurrency:
-  group: build-queue
-  cancel-in-progress: false
-
 on:
   workflow_dispatch:
     inputs:
