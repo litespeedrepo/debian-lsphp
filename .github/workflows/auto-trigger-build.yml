@@ -7,10 +7,6 @@ on:
     paths:
       - VERSION.txt
 
-concurrency:
-  group: build-queue
-  cancel-in-progress: false
-
 jobs:
   detect-and-trigger:
     runs-on: ubuntu-latest
