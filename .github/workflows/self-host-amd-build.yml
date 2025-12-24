@@ -42,9 +42,6 @@ on:
 
 jobs:
   package:
-    concurrency:
-      group: build-queue
-      cancel-in-progress: false  
     runs-on: [self-hosted, linux, x64]
     container:
       image: eggcold/debian-build
