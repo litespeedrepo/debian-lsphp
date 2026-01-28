@@ -6,5 +6,5 @@ ioncube=15.0.0
 lsphp=8.4.17
 memcached=3.4.0
 msgpack=3.0.0
-pear=1.10.17
+pear=1.10.18
 redis=6.3.0
