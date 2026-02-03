@@ -96,12 +96,12 @@ prepare_source(){
         if [ ${PHP_EXTENSION} == 'ioncube' ] ; then
             #source_url='https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz'
             if [[ ${archs} == 'arm64' ]] ; then
-                source_url="http://downloads2.ioncube.com/loader_downloads/ioncube_loaders_lin_aarch64_${version}.tar.gz"
+                source_url="http://downloads2.ioncube.com/loader_downloads/ioncube_loaders_lin_aarch64_${version}_beta.tar.gz"
             else
-                source_url="http://downloads2.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64_${version}.tar.gz"
+                source_url="http://downloads2.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64_${version}_beta.tar.gz"
             fi
             wget ${source_url}
-            tar -xzf ioncube_loaders_lin_*_${version}.tar.gz
+            tar -xzf ioncube_loaders_lin_*_${version}_beta.tar.gz
             source_folder_name="ioncube"
         elif [ ${PHP_EXTENSION} == 'pear' ] ; then
             source_url="http://download.pear.php.net/package/PEAR-${version}.tgz"
