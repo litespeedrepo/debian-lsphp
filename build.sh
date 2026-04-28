@@ -1,157 +1,107 @@
-#!/bin/bash
+name: Auto-trigger build on version bump
 
-target_server='repo-dev.litespeedtech.com'
-prod_server='rpms.litespeedtech.com'
-EPACE='        '
-PHP_V=81
+on:
+  push:
+    branches:
+      - php81
+    paths:
+      - VERSION.txt
 
-PUSH_FLAG='OFF'
-lsapi_version=8.3
-version=""
-revision=""
+jobs:
+  detect-and-trigger:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
 
-source ./functions.sh #2>/dev/null
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
-if [ "$(id -u)" != "0" ]; then
-    echo "Error: The user is not root"
-    echo "Please run this script as root"
-    exit 1
-fi
+      - name: Detect changed versions
+        id: detect
+        run: |
+          echo "Reading VERSION.txt..."
+          OLD_CONTENT=$(git show ${{ github.event.before }}:VERSION.txt 2>/dev/null || true)
+          NEW_CONTENT=$(cat VERSION.txt)
 
-echow(){
-    FLAG=${1}
-    shift
-    echo -e "\033[1m${EPACE}${FLAG}\033[0m${@}"
-}
+          echo "$OLD_CONTENT" | sort > old.txt
+          echo "$NEW_CONTENT" | sort > new.txt
 
-show_help()
-{
-    echo -e "\033[1mExamples\033[0m"
-    echo "${EPACE} ./build.sh [apcu|igbinary|imagick|...|memcached] [noble|bookworm|...|buster] [amd64|arm64]"
-    echo "${EPACE} ./build.sh ioncube bookworm amd64"
-    echo -e "\033[1mOPTIONS\033[0m"
-    echow '--version [NUMBER]'
-    echo "${EPACE}${EPACE}Specify package version number"
-    echo "${EPACE}${EPACE}Example: ./build.sh apcu noble amd64 --version 5.1.24"
-    echow '--revision [NUMBER]'
-    echo "${EPACE}${EPACE}Specify package revision number"
-    echo "${EPACE}${EPACE}Example: ./build.sh apcu noble amd64 --version 5.1.24 --revision 5"
-    echow '--push-flag'
-    echo "${EPACE}${EPACE}push packages to dev server."
-    echo "${EPACE}${EPACE}Example: ./build.sh apcu noble amd64 --push-flag"
-    echow '-H, --help'
-    echo "${EPACE}${EPACE}Display help and exit."
-    exit 0
-}
+          DIFF=$(diff -U0 old.txt new.txt 2>/dev/null | grep -E "^\+" | grep -vE "^(---|\+\+\+)" || true)
+          if [ -z "$DIFF" ]; then
+            echo "No version changes detected (order-only change ignored)."
+            exit 0
+          fi
 
-while [[ $# -gt 0 ]]; do
-    case "$1" in
-        -h|--help)
-            show_help
-            ;;
-        --version)
-            shift
-            version="$1"
-            ;;
-        --revision)
-            shift
-            revision="$1"
-            ;;
-        --push|--push-flag)
-            PUSH_FLAG='ON'
-            ;;
-        *)
-            break
-            ;;
-    esac
-    shift
-done
+          NEW_LINES=$(echo "$DIFF" | cut -c2-)
+          echo "NEW_LINES:"
+          echo "$NEW_LINES"
 
-product="$1"
-dists="$2"
-input_archs="$3"
+          CHANGED_PKGS=()
+          while IFS= read -r line; do
+            NAME=${line%%=*}
+            VER=${line#*=}
+            OLD_VER=$(echo "$OLD_CONTENT" | grep "^$NAME=" | cut -d'=' -f2 || echo "")
+            if [[ "$OLD_VER" != "" ]] && dpkg --compare-versions "$VER" lt "$OLD_VER"; then
+              echo "Skipping downgrade for $NAME ($OLD_VER -> $VER)"
+              continue
+            fi
+            if [[ "$VER" != "$OLD_VER" ]]; then
+              CHANGED_PKGS+=("$NAME=$VER")
+            fi
+          done <<< "$NEW_LINES"
 
-if [ -z "$product" ]; then
-    show_help
-fi
+          if [ ${#CHANGED_PKGS[@]} -eq 0 ]; then
+            echo "No valid version upgrades detected."
+            exit 0
+          fi
+          echo "CHANGED_PKGS=${CHANGED_PKGS[*]}" >> $GITHUB_ENV
+          echo "Detected package updates: ${CHANGED_PKGS[*]}"
 
-if [ -z "$version" ]; then
-    version="$(grep "${product}=" VERSION.txt | awk -F '=' '{print $2}')"
-fi
+      - name: Trigger AMD64  builds for all changed packages
+        if: env.CHANGED_PKGS != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DISTROS="\"noble\",\"jammy\",\"focal\",\"trixie\",\"bookworm\",\"bullseye\""
+          TARGET_WORKFLOW=".github/workflows/self-host-amd-build.yml"
+          if ! gh api repos/${{ github.repository }}/contents/${TARGET_WORKFLOW} --jq '.path' &>/dev/null; then
+            echo "Workflow ${TARGET_WORKFLOW} not found. Skipping AMD64 build triggers."
+            exit 0
+          fi
 
-if [ "$product" == 'lsphp' ]; then
-    product="${product}${PHP_V}"
-else
-    product="lsphp${PHP_V}-${product}"
-fi
+          for pkg_ver in ${{ env.CHANGED_PKGS }}; do
+            PKG=$(echo "$pkg_ver" | cut -d'=' -f1)
+            VER=$(echo "$pkg_ver" | cut -d'=' -f2)
+            echo "Triggering amd build for $PKG version $VER"
+            gh workflow run self-host-amd-build.yml \
+              --ref ${{ github.ref_name }} \
+              -f package="\"$PKG\"" \
+              -f distro="$DISTROS" \
+              || echo "Failed to trigger $PKG"
+          done
 
-if [ "$dists" = "all" ]; then
-    dists="resolute noble jammy focal bookworm bullseye buster"
-    echo "The new value for dists is $dists"
-fi
-
-if [ -z "$revision" ]; then
-    TMP_DIST=$(echo "$dists" | awk '{ print $1 }')
-
-    if ! echo "$product" | grep '-' >/dev/null; then
-        revision=$(curl -isk "https://${prod_server}/debian/pool/main/${TMP_DIST}/" \
-            | grep "${product}_${version}" \
-            | awk -F '-' '{print $3}' \
-            | awk -F '+' '{print $1}' \
-            | tail -1)
-    else
-        revision=$(curl -isk "https://${prod_server}/debian/pool/main/${TMP_DIST}/" \
-            | grep "${product}_${version}" \
-            | awk -F '-' '{print $4}' \
-            | awk -F '+' '{print $1}' \
-            | tail -1)
-    fi
-
-    if [[ "$revision" =~ ^-?[0-9]+$ ]]; then
-        revision=$((revision + 1))
-    else
-        echo "$revision is not a number, set value to 1"
-        revision=1
-    fi
-fi
-
-if [ -z "$input_archs" ]; then
-    echo 'input_archs is not found, use default value amd64'
-    archs='amd64'
-else
-    archs="$input_archs"
-fi
-
-list_packages()
-{
-    echo "##################################################"
-    echo " The package building process has finished ! "
-    echo "##################################################"
-    echo "########### Build Result Content #################"
-
-    for dist in $dists; do
-        ls -lR "$BUILD_RESULT_DIR/$dist"
-    done
-
-    echo " ################# End of Result #################"
-
-    for dist in $dists; do
-        ls -lR "$BUILD_RESULT_DIR/$dist" | grep "${product}_${version}-${revision}+${dist}_.*.deb" >/dev/null
-        if [ $? != 0 ]; then
-            echo "${product}_${version}-${revision}+${dist}_.*.deb is not found!"
-            exit 1
-        fi
-    done
-}
-
-check_input
-set_paras
-set_build_dir
-prepare_source
-pbuild_packages
-list_packages
-
-if [ "$PUSH_FLAG" = 'ON' ]; then
-    upload_to_server
-    gen_dev_release
-fi
+      - name: Trigger ARM64 builds for all changed packages
+        if: env.CHANGED_PKGS != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DISTROS="\"noble\",\"jammy\",\"focal\",\"trixie\",\"bookworm\",\"bullseye\""
+          TARGET_WORKFLOW=".github/workflows/self-host-arm-build.yml"
+          if ! gh api repos/${{ github.repository }}/contents/${TARGET_WORKFLOW} --jq '.path' &>/dev/null; then
+            echo "Workflow ${TARGET_WORKFLOW} not found. Skipping ARM64 build triggers."
+            exit 0
+          fi          
+          for pkg_ver in ${{ env.CHANGED_PKGS }}; do
+            PKG=$(echo "$pkg_ver" | cut -d'=' -f1)
+            VER=$(echo "$pkg_ver" | cut -d'=' -f2)
+            echo "Triggering arm build for $PKG version $VER"
+            gh workflow run self-host-arm-build.yml \
+              --ref ${{ github.ref_name }} \
+              -f package="\"$PKG\"" \
+              -f distro="$DISTROS" \
+              || echo "Failed to trigger $PKG"
+          done
