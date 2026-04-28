@@ -44,6 +44,7 @@ show_help()
     exit 0
 }
 
+POSITIONAL_ARGS=()
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -h|--help)
@@ -61,12 +62,13 @@ while [[ $# -gt 0 ]]; do
             PUSH_FLAG='ON'
             ;;
         *)
-            break
+            POSITIONAL_ARGS+=("$1")
             ;;
     esac
     shift
 done
 
+set -- "${POSITIONAL_ARGS[@]}"
 product="$1"
 dists="$2"
 input_archs="$3"
@@ -86,7 +88,7 @@ else
 fi
 
 if [ "$dists" = "all" ]; then
-    dists="resolute noble jammy focal bookworm bullseye buster"
+    dists="noble jammy focal bookworm bullseye buster resolute"
     echo "The new value for dists is $dists"
 fi
 
