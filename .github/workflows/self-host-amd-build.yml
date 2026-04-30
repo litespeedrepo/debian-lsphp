@@ -20,7 +20,7 @@ on:
           - '"redis"'
           - '"igbinary"'
           - '"lsphp","imap","pear","apcu","igbinary","imagick","ioncube","msgpack","memcached","redis"'
-          - '"pear","apcu","igbinary","imagick","ioncube","msgpack","memcached","redis"'
+          - '"imap","pear","apcu","igbinary","imagick","ioncube","msgpack","memcached","redis"'
       version:
         description: 'version number'
         type: number

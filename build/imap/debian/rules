@@ -1,6 +1,8 @@
 #!/usr/bin/make -f
 
 export DH_VERBOSE = 1
+export DEB_CFLAGS_MAINT_APPEND = -Wno-error=implicit-function-declaration
+export DEB_CXXFLAGS_MAINT_APPEND = -Wno-error=implicit-function-declaration
 
 PACKAGE_NAME      := imap
 PHP_VERSION       := 82
