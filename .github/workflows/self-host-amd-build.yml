@@ -40,7 +40,7 @@ on:
           - '"trixie"'
           - '"bookworm"'
           - '"bullseye"'
-          - '"resolute","noble","jammy","focal","trixie","bookworm","bullseye"'
+          - '"resolute","noble","jammy","trixie","bookworm","bullseye"'
 
 jobs:
   package:
