@@ -5,6 +5,6 @@ imap=1.0.3
 ioncube=15.5.0
 lsphp=8.2.31
 memcached=3.4.0
-msgpack=3.0.0
+msgpack=3.0.1
 pear=1.10.18
 redis=6.3.0
