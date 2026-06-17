@@ -10,18 +10,19 @@ on:
         type: choice
         options:
           - '"lsphp"'
-          - '"imap"' 
-          - '"pspell"'    
-          - '"pear"'               
+          - '"imap"'
+          - '"pspell"'
+          - '"pear"'
           - '"apcu"'
-          - '"igbinary"'          
+          - '"igbinary"'
           - '"imagick"'
           - '"ioncube"'
-          - '"msgpack"'          
+          - '"mailparse"'
+          - '"msgpack"'
           - '"memcached"'
           - '"redis"'
-          - '"lsphp","imap","pspell","pear","apcu","igbinary","imagick","ioncube","msgpack","memcached","redis"'
-          - '"imap","pear","pspell","apcu","igbinary","imagick","ioncube","msgpack","memcached","redis"'
+          - '"lsphp","imap","pspell","pear","apcu","igbinary","imagick","ioncube","mailparse","msgpack","memcached","redis"'
+          - '"imap","pear","pspell","apcu","igbinary","imagick","ioncube","mailparse","msgpack","memcached","redis"'
       version:
         description: 'version number'
         type: number
