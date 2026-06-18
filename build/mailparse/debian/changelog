@@ -1,0 +1,5 @@
+lsphp#PHP_VERSION#-mailparse (#VERSION#-#BUILD_REVISION#+#DIST#) #DIST#; urgency=medium
+
+  * This is build #BUILD_REVISION# of lsphp#PHP_VERSION#-mailparse version #VERSION#
+
+ -- lsadm <info@litespeedtech.com>  #DATE# +0100

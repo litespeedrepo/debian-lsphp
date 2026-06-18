@@ -1,0 +1,25 @@
+Source: lsphp84-mailparse
+Section: php
+Priority: optional
+Maintainer: litespeed <info@litespeedtech.com>
+Uploaders: litespeed <info@litespeedtech.com>
+Build-Depends: debhelper (>= 10~),
+               lsphp84-common,
+               lsphp84-dev
+Standards-Version: 4.5.1
+
+Package: lsphp84-mailparse
+Architecture: any
+Depends: ${misc:Depends},
+         ${php:Depends},
+         ${shlibs:Depends}
+Recommends: ghostscript,
+            ttf-dejavu-core
+Provides: ${php:Provides}
+Description: Email message manipulation for PHP
+ Mailparse is an extension for parsing and working with email
+ messages.
+ .
+ It can deal with rfc822 and rfc2045 (MIME) compliant messages.
+ .
+ This is empty package that depends on all PHP versions.
