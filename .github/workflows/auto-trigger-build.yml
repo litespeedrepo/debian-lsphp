@@ -18,47 +18,63 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
       - name: Detect changed versions
         id: detect
+        shell: bash
         run: |
+          set -euo pipefail
+
           echo "Reading VERSION.txt..."
-          OLD_CONTENT=$(git show ${{ github.event.before }}:VERSION.txt 2>/dev/null || true)
-          NEW_CONTENT=$(cat VERSION.txt)
-
-          echo "$OLD_CONTENT" | sort > old.txt
-          echo "$NEW_CONTENT" | sort > new.txt
-
-          DIFF=$(diff -U0 old.txt new.txt 2>/dev/null | grep -E "^\+" | grep -vE "^(---|\+\+\+)" || true)
-          if [ -z "$DIFF" ]; then
-            echo "No version changes detected (order-only change ignored)."
+          BASE_REF="${{ github.event.before }}"
+          if [ "$BASE_REF" = "0000000000000000000000000000000000000000" ]; then
+            echo "No base commit available for comparison."
             exit 0
           fi
 
-          NEW_LINES=$(echo "$DIFF" | cut -c2-)
-          echo "NEW_LINES:"
-          echo "$NEW_LINES"
+          OLD_CONTENT=$(git show "${BASE_REF}:VERSION.txt" 2>/dev/null || true)
+          NEW_CONTENT=$(cat VERSION.txt)
+
+          if [ -z "$OLD_CONTENT" ]; then
+            echo "Base VERSION.txt is unavailable; skipping to avoid false-positive rebuilds."
+            exit 1
+          fi
+
+          declare -A OLD_VERSIONS=()
+          declare -A NEW_VERSIONS=()
+
+          while IFS='=' read -r name ver; do
+            [ -z "${name:-}" ] && continue
+            OLD_VERSIONS["$name"]="$ver"
+          done <<< "$OLD_CONTENT"
+
+          while IFS='=' read -r name ver; do
+            [ -z "${name:-}" ] && continue
+            NEW_VERSIONS["$name"]="$ver"
+          done <<< "$NEW_CONTENT"
 
           CHANGED_PKGS=()
-          while IFS= read -r line; do
-            NAME=${line%%=*}
-            VER=${line#*=}
-            OLD_VER=$(echo "$OLD_CONTENT" | grep "^$NAME=" | cut -d'=' -f2 || echo "")
-            if [[ "$OLD_VER" != "" ]] && dpkg --compare-versions "$VER" lt "$OLD_VER"; then
+          for NAME in "${!NEW_VERSIONS[@]}"; do
+            OLD_VER="${OLD_VERSIONS[$NAME]:-}"
+            VER="${NEW_VERSIONS[$NAME]}"
+
+            if [ -n "$OLD_VER" ] && dpkg --compare-versions "$VER" lt "$OLD_VER"; then
               echo "Skipping downgrade for $NAME ($OLD_VER -> $VER)"
               continue
             fi
-            if [[ "$VER" != "$OLD_VER" ]]; then
+
+            if [ "$VER" != "$OLD_VER" ]; then
               CHANGED_PKGS+=("$NAME=$VER")
             fi
-          done <<< "$NEW_LINES"
+          done
 
-          if [ ${#CHANGED_PKGS[@]} -eq 0 ]; then
+          if [ "${#CHANGED_PKGS[@]}" -eq 0 ]; then
             echo "No valid version upgrades detected."
             exit 0
           fi
-          echo "CHANGED_PKGS=${CHANGED_PKGS[*]}" >> $GITHUB_ENV
+
+          echo "CHANGED_PKGS=${CHANGED_PKGS[*]}" >> "$GITHUB_ENV"
           echo "Detected package updates: ${CHANGED_PKGS[*]}"
 
       - name: Trigger AMD64  builds for all changed packages
