@@ -2,9 +2,9 @@
 export DH_VERBOSE = 1
 
 PACKAGE_NAME      := mailparse
-PHP_VERSION       := 85
-PHP_DOT_VERSION   := 8.5
-PHP_DATE          := 20250925
+PHP_VERSION       := 82
+PHP_DOT_VERSION   := 8.2
+PHP_DATE          := 20220829
 PHP_DIR           := /usr/local/lsws/lsphp$(PHP_VERSION)
 BUILD_ROOT        := $(shell pwd)
 
