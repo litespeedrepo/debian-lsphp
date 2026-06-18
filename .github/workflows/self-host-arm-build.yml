@@ -15,12 +15,13 @@ on:
           - '"apcu"'
           - '"imagick"'
           - '"ioncube"'
+          - '"mailparse"'
           - '"memcached"'
           - '"msgpack"'
           - '"redis"'
           - '"igbinary"'
-          - '"lsphp","imap","pear","apcu","igbinary","imagick","ioncube","msgpack","memcached","redis"'
-          - '"imap","pear","apcu","igbinary","imagick","ioncube","msgpack","memcached","redis"'
+          - '"lsphp","imap","pear","apcu","igbinary","imagick","ioncube","mailparse","msgpack","memcached","redis"'
+          - '"imap","pear","apcu","igbinary","imagick","ioncube","mailparse","msgpack","memcached","redis"'
       version:
         description: 'version number'
         type: number
