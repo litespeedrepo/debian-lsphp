@@ -31,3 +31,4 @@
 0045-Update-gcc-func-attr-macro.patch
 0046-Disable-garbage-collection-routine.patch
 0047-Add-missing-header-includes.patch
+0048-PHP-8.1-CVE-2026-109618-109619.patch
