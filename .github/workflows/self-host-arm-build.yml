@@ -38,9 +38,11 @@ on:
           - '"noble"'
           - '"jammy"'
           - '"focal"'
+          - '"bionic"'
           - '"trixie"'
           - '"bookworm"'
           - '"bullseye"'
+          - '"buster"'
           - '"resolute","noble","jammy","trixie","bookworm","bullseye"'
 
 jobs:
