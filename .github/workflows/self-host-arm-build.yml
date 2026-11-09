@@ -28,18 +28,7 @@ on:
       distro:
         description: 'distro'
         required: true
-        default: 'noble'
-        type: choice
-        options:
-          - '"noble"'
-          - '"jammy"'
-          - '"focal"'
-          - '"bionic"'
-          - '"trixie"'
-          - '"bookworm"'
-          - '"bullseye"'
-          - '"buster"'
-          - '"noble","jammy","trixie","bookworm","bullseye"'
+
 
 jobs:
   package:
