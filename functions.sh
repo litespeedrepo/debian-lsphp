@@ -68,7 +68,7 @@ prepare_source(){
         wget $source_url
         tar xzf php-$version.tar.gz
 
-        source_folder_name=php8.1-$version
+        source_folder_name=php8.0-$version
         mv php-$version $source_folder_name
 
         SOURCE_DIR=$BUILD_DIR/$source_folder_name
@@ -90,7 +90,7 @@ prepare_source(){
 
         cd ..
         #prepare the patched source as orig.tar.xz file
-        tar -cJf php8.1_${version}.orig.tar.xz ${source_folder_name}
+        tar -cJf php8.0_${version}.orig.tar.xz ${source_folder_name}
         ;;
     lsphp${PHP_VERSION_NUMBER}-${PHP_EXTENSION})
         if [ ${PHP_EXTENSION} == 'ioncube' ] ; then
