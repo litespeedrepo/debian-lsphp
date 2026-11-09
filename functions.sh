@@ -63,7 +63,7 @@ set_build_dir(){
 prepare_source(){
     cd $BUILD_DIR
     case "$product" in
-    lsphp81)
+    lsphp80)
         source_url="https://www.php.net/distributions/php-$version.tar.gz"
         wget $source_url
         tar xzf php-$version.tar.gz

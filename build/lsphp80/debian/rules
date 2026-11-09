@@ -249,7 +249,7 @@ prepared-stamp:
 
 unprepared:
 	dh_testdir
-	$(SED) -i -e 's/EXTRA_VERSION="-$(PHP_DEBIAN_REVISION)"/EXTRA_VERSION=""/' configure.ac
+#	$(SED) -i -e 's/EXTRA_VERSION="-$(PHP_DEBIAN_REVISION)"/EXTRA_VERSION=""/' configure.ac
 #	-[ -f ext/ext_skel.in ] && mv ext/ext_skel.in ext/ext_skel
 
 clean: unprepared
