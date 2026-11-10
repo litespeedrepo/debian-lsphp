@@ -1,0 +1,20 @@
+#!/bin/sh
+
+MATCH="^[[:space:]]*($|;)"
+
+echo "==== Additional LSPHP 7.4 information ====" >&3
+echo "" >&3
+echo "++++ LSPHP 7.4 SAPI (php7.4query -S): ++++" >&3
+/usr/local/lsws/lsphp74/bin/phpquery -S >&3
+echo "" >&3
+echo "++++ LSPHP 7.4 Extensions (php@7.4query -M -v): ++++" >&3
+/usr/local/lsws/lsphp74/bin/phpquery -M -v >&3
+echo "" >&3
+
+echo "++++ Configuration files: ++++" >&3
+for dsoname in @modules@; do
+    inifile=${dsoname}.ini
+    echo "**** /usr/local/lsws/lsphp74/etc/php/7.4/mods-available/$dsoname.ini ****" >&3
+    grep -Ev "$MATCH" "/usr/local/lsws/lsphp74/etc/php/7.4/mods-available/$dsoname.ini" >&3
+    echo "" >&3
+done

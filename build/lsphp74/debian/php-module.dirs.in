@@ -1,0 +1,3 @@
+#/usr/local/lsws/lsphp74/etc/php/7.4/mods-available
+/usr/local/lsws/lsphp74/lib/php/@PHP_API@
+#EXTRA#

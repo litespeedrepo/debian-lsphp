@@ -1,0 +1,7 @@
+php7.4 (#VERSION#-#BUILD_REVISION#+#DIST#) #DIST#; urgency=medium
+
+  * This is build #BUILD_REVISION# of lsphp74 
+  * 
+
+ -- lsadm <info@litespeedtech.com>  #DATE# +0100
+

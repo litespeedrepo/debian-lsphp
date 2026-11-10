@@ -3,7 +3,7 @@
 target_server='repo-dev.litespeedtech.com'
 prod_server='rpms.litespeedtech.com'
 EPACE='        '
-PHP_V=80
+PHP_V=74
 
 PUSH_FLAG='OFF'
 lsapi_version=8.3
