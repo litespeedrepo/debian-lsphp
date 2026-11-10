@@ -140,7 +140,6 @@ COMMON_CONFIG := \
 		--enable-calendar \
 		--enable-ctype \
 		--enable-dom \
-		--with-enchant \
 		--enable-exif \
 		--with-gettext \
 		--with-gmp \

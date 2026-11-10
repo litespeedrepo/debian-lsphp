@@ -10,17 +10,16 @@ Build-Depends: autoconf (>= 2.59),
                bison,
                chrpath,
                debhelper,
-               dpkg-dev, 
+               dpkg-dev,
                flex,
                freetds-dev,
                libapparmor-dev,
-               libapr1-dev, 
+               libapr1-dev,
                libbz2-dev,
                libc-client-dev,
                libcurl4-openssl-dev | libcurl-dev,
                libdb-dev,
                libedit-dev,
-               libenchant-dev,
                libevent-dev,
                libexpat1-dev,
                libfreetype6-dev,
@@ -75,19 +74,21 @@ XS-Testsuite: autopkgtest
 Package: lsphp74
 Architecture: any
 Depends: libmagic1,
+         mime-support,
          lsphp74-common (>= ${source:Version}),
+         lsphp74-json,
          lsphp74-opcache,
          tzdata,
          ucf,
          ${misc:Depends},
          ${shlibs:Depends}
 Provides: ${php:Provides}
-Breaks: 
-Replaces: 
+Breaks:
+Replaces:
 Recommends: php-readline
 Suggests: php-pear
 Description: server-side, HTML-embedded scripting language (LSAPI binary)
- This package provides the /usr/local/lsws/bin/lsphp LSAPI interpreter 
+ This package provides the /usr/local/lsws/bin/lsphp LSAPI interpreter
  built for use in LiteSpeed Web Server (lsws).
  .
  ${php:Extensions}
@@ -100,7 +101,7 @@ Package: lsphp74-common
 Architecture: all
 Depends: ${misc:Depends}
 Suggests: php-user-cache
-Conflicts: 
+Conflicts:
 Description: Common files for packages built from the PHP source
  This package contains the documentation and example files relevant to all
  the other packages built from the PHP source.
@@ -156,5 +157,3 @@ Description: PHP 70 modules source package
  .
  You probably don't want to install this package unless you want to
  build specific PHP module that is not distributed with Debian itself.
-
-

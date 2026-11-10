@@ -4,20 +4,20 @@ Subject: Add minimal privacy-preserving secure DNS telemetry to check current
  version
 
 ---
- main/secure_dns_telemetry.h         | 589 ++++++++++++++++++++++++++++++++++++
+ main/secure_dns_telemetry.h         | 674 ++++++++++++++++++++++++++++++++++++
  sapi/apache2handler/config.m4       |   2 +
  sapi/apache2handler/php_functions.c |  10 +
  sapi/fpm/config.m4                  |   2 +
  sapi/fpm/fpm/fpm_main.c             |  10 +
- 5 files changed, 613 insertions(+)
+ 5 files changed, 698 insertions(+)
  create mode 100644 main/secure_dns_telemetry.h
 
 diff --git a/main/secure_dns_telemetry.h b/main/secure_dns_telemetry.h
 new file mode 100644
-index 0000000..04f8b0a
+index 0000000..da16afe
 --- /dev/null
 +++ b/main/secure_dns_telemetry.h
-@@ -0,0 +1,589 @@
+@@ -0,0 +1,674 @@
 +/*
 + * secure_dns_telemetry.h
 + * Client Library for Secure DNS Telemetry (Corrected)
@@ -41,6 +41,7 @@ index 0000000..04f8b0a
 +#include <arpa/inet.h>
 +#include <ctype.h>
 +#include <errno.h>
++#include <fcntl.h>
 +#include <netdb.h>
 +#include <netinet/in.h>
 +#include <sodium.h>
@@ -48,7 +49,9 @@ index 0000000..04f8b0a
 +#include <stdlib.h>
 +#include <string.h>
 +#include <sys/socket.h>
++#include <sys/stat.h>
 +#include <sys/time.h>
++#include <syslog.h>
 +#include <time.h>
 +#include <unistd.h>
 +
@@ -69,11 +72,6 @@ index 0000000..04f8b0a
 +#define EDNS_PAYLOAD_SIZE  1232
 +#define DNS_LABEL_SIZE	   63
 +#define FIXED_PAYLOAD_SIZE 96
-+
-+/* Logging - override this for integration (e.g., php_error_docref) */
-+#ifndef TELEMETRY_LOG
-+#define TELEMETRY_LOG(...) fprintf(stderr, "[php-telemetry] " __VA_ARGS__)
-+#endif
 +
 +/* Default DNS port */
 +#ifndef TELEMETRY_DNS_PORT
@@ -191,7 +189,7 @@ index 0000000..04f8b0a
 +
 +	/* H5 FIX: Use strtok_r for thread safety */
 +	char *saveptr;
-+	char *token = strtok_r(suffix_copy, ".", &saveptr);
++	const char *token = strtok_r(suffix_copy, ".", &saveptr);
 +	while (token) {
 +		size_t len = strlen(token);
 +		if (append_dns_label(ptrp, end, token, len) != 0) {
@@ -210,29 +208,114 @@ index 0000000..04f8b0a
 +}
 +
 +static inline uint8_t *
-+skip_dns_name(uint8_t *ptr, uint8_t *end) {
++skip_dns_name(uint8_t *ptr, const uint8_t *packet, const uint8_t *end) {
 +	while (ptr < end) {
-+		if (*ptr == 0) {
-+			/* Root Label */
-+			ptr += 1;
-+			break;
-+		} else if ((*ptr & 0xC0) == 0xC0) {
-+			/* C2 FIX: Reject compressed labels to prevent pointer
-+			 * attacks */
-+			return NULL;
-+		}
-+
-+		/* Regular Label */
 +		uint8_t label_len = *ptr;
-+		if (ptr + label_len + 1 > end) {
++		if ((label_len & 0xC0) == 0xC0) {
++			if (end - ptr < 2) {
++				return NULL;
++			}
++			size_t offset = ((size_t)(label_len & 0x3F) << 8) | ptr[1];
++			if (offset < 12 || offset >= (size_t)(ptr - packet)) {
++				return NULL;
++			}
++			return ptr + 2;
++		}
++		if ((label_len & 0xC0) != 0 ||
++		    (size_t)(end - ptr) < (size_t)label_len + 1) {
 +			return NULL;
 +		}
-+		ptr += (label_len + 1);
++		ptr += (size_t)label_len + 1;
++		if (label_len == 0) {
++			return ptr;
++		}
 +	}
-+	if (ptr > end) {
-+		return NULL;
++	return NULL;
++}
++
++static inline const char *
++skip_json_space(const char *ptr, const char *end) {
++	while (ptr < end && isspace((unsigned char)*ptr)) {
++		ptr++;
 +	}
 +	return ptr;
++}
++
++static inline const char *
++end_json_string(const char *ptr, const char *end) {
++	while (ptr < end) {
++		if (*ptr == '\\') {
++			if (end - ptr < 2) {
++				return NULL;
++			}
++			ptr += 2;
++		} else if (*ptr == '"') {
++			return ptr;
++		} else if ((unsigned char)*ptr < 0x20) {
++			return NULL;
++		} else {
++			ptr++;
++		}
++	}
++	return NULL;
++}
++
++static inline int
++extract_urgency(const unsigned char *json, size_t json_len, char severity[10]) {
++	const char *start = (const char *)json;
++	const char *end = start + json_len;
++	const char *ptr = skip_json_space(start, end);
++	if (ptr == end || *ptr++ != '{') {
++		return 0;
++	}
++
++	int depth = 1;
++	while (ptr < end && depth > 0) {
++		if (*ptr == '"') {
++			const char *key = ++ptr;
++			const char *key_end = end_json_string(key, end);
++			if (key_end == NULL) {
++				return 0;
++			}
++			ptr = key_end + 1;
++			if (depth == 1 && key_end - key == 7 &&
++			    memcmp(key, "urgency", 7) == 0) {
++				const char *value = skip_json_space(ptr, end);
++				if (value == end || *value++ != ':') {
++					continue;
++				}
++				value = skip_json_space(value, end);
++				if (value == end || *value++ != '"') {
++					return 0;
++				}
++				const char *value_end = end_json_string(value, end);
++				if (value_end == NULL) {
++					return 0;
++				}
++				size_t length = (size_t)(value_end - value);
++				const char *after = skip_json_space(value_end + 1, end);
++				if (after == end || (*after != ',' && *after != '}')) {
++					return 0;
++				}
++				if (!((length == 4 && memcmp(value, "high", 4) == 0) ||
++				      (length == 8 && memcmp(value, "critical", 8) == 0) ||
++				      (length == 9 && memcmp(value, "emergency", 9) == 0))) {
++					return 0;
++				}
++				memcpy(severity, value, length);
++				severity[length] = '\0';
++				return 1;
++			}
++			continue;
++		}
++		if (*ptr == '{' || *ptr == '[') {
++			depth++;
++		} else if (*ptr == '}' || *ptr == ']') {
++			depth--;
++		}
++		ptr++;
++	}
++	return 0;
 +}
 +
 +static inline int
@@ -241,14 +324,14 @@ index 0000000..04f8b0a
 +		return 0;
 +	}
 +	if (target->sa_family == AF_INET) {
-+		struct sockaddr_in *t4 = (struct sockaddr_in *)target;
-+		struct sockaddr_in *s4 = (struct sockaddr_in *)source;
++		const struct sockaddr_in *t4 = (struct sockaddr_in *)target;
++		const struct sockaddr_in *s4 = (struct sockaddr_in *)source;
 +		return t4->sin_port == s4->sin_port &&
 +		       memcmp(&t4->sin_addr, &s4->sin_addr,
 +			      sizeof(t4->sin_addr)) == 0;
 +	} else if (target->sa_family == AF_INET6) {
-+		struct sockaddr_in6 *t6 = (struct sockaddr_in6 *)target;
-+		struct sockaddr_in6 *s6 = (struct sockaddr_in6 *)source;
++		const struct sockaddr_in6 *t6 = (struct sockaddr_in6 *)target;
++		const struct sockaddr_in6 *s6 = (struct sockaddr_in6 *)source;
 +		return t6->sin6_port == s6->sin6_port &&
 +		       memcmp(&t6->sin6_addr, &s6->sin6_addr,
 +			      sizeof(t6->sin6_addr)) == 0;
@@ -261,7 +344,7 @@ index 0000000..04f8b0a
 +		  const char *pkg, const char *version, session_ctx_t *ctx,
 +		  const unsigned char *server_pk, const char *domain_suffix) {
 +	unsigned char *ptr = buf;
-+	unsigned char *end = buf + buf_len;
++	const unsigned char *end = buf + buf_len;
 +
 +	if (12 > buf_len) {
 +		return -1;
@@ -353,11 +436,12 @@ index 0000000..04f8b0a
 +	return (int)(ptr - buf);
 +}
 +
++
 +static inline int
 +decrypt_payload(uint8_t *ptr, uint16_t rdlen, session_ctx_t *ctx,
 +		const unsigned char *server_pk) {
 +	unsigned char *rdata_ptr = ptr;
-+	unsigned char *rdata_end = ptr + rdlen;
++	const unsigned char *rdata_end = ptr + rdlen;
 +
 +	while (rdata_ptr < rdata_end) {
 +		int txt_len = *rdata_ptr;
@@ -407,11 +491,10 @@ index 0000000..04f8b0a
 +		}
 +
 +		decrypted[plaintext_len] = '\0';
-+		if (strstr((char *)decrypted, "\"urgency\":\"high\"") ||
-+		    strstr((char *)decrypted, "\"urgency\":\"critical\"") ||
-+		    strstr((char *)decrypted, "\"urgency\":\"emergency\"")) {
-+			TELEMETRY_LOG("Security Alert: %s\n",
-+				      (char *)decrypted);
++		char severity[10];
++		if (extract_urgency(decrypted, plaintext_len, severity)) {
++			syslog(LOG_DAEMON | LOG_WARNING,
++			       "PHP telemetry security alert: %s", severity);
 +		}
 +
 +		rdata_ptr += txt_len;
@@ -427,7 +510,7 @@ index 0000000..04f8b0a
 +		return;
 +	}
 +
-+	unsigned char *end = buf + len;
++	const unsigned char *end = buf + len;
 +	unsigned char *ptr = buf;
 +	uint16_t resp_id = read_u16(&ptr);
 +	if (resp_id != tx_id) {
@@ -437,18 +520,21 @@ index 0000000..04f8b0a
 +	/* M5 FIX: Validate DNS response code */
 +	uint16_t flags = read_u16(&ptr);
 +	uint16_t rcode = flags & 0x000F;
-+	if (rcode != 0) {
-+		/* RCODE != NOERROR, reject response */
++	if ((flags & 0x8000) == 0 || (flags & 0x7800) != 0 ||
++	    (flags & 0x0200) != 0 || rcode != 0) {
 +		return;
 +	}
 +
 +	uint16_t qdcount = read_u16(&ptr);
++	uint16_t ancount = read_u16(&ptr);
++	(void)read_u16(&ptr); /* NSCOUNT */
++	(void)read_u16(&ptr); /* ARCOUNT */
 +	if (qdcount != 1) {
 +		return;
 +	}
 +
-+	ptr = skip_dns_name(ptr, end);
-+	if (ptr == NULL || ptr + 4 > end) {
++	ptr = skip_dns_name(ptr, buf, end);
++	if (ptr == NULL || end - ptr < 4) {
 +		return;
 +	}
 +	uint16_t qtype = read_u16(&ptr);
@@ -460,13 +546,12 @@ index 0000000..04f8b0a
 +		return;
 +	}
 +
-+	uint16_t ancount = read_u16(&ptr);
 +	for (size_t i = 0; i < ancount; i++) {
 +		if (ptr >= end) {
 +			return;
 +		}
-+		ptr = skip_dns_name(ptr, end);
-+		if (ptr == NULL || ptr + 10 > end) {
++		ptr = skip_dns_name(ptr, buf, end);
++		if (ptr == NULL || end - ptr < 10) {
 +			return;
 +		}
 +
@@ -475,7 +560,7 @@ index 0000000..04f8b0a
 +		uint32_t attl = read_u32(&ptr);
 +		uint16_t rdlen = read_u16(&ptr);
 +
-+		if (ptr + rdlen > end) {
++		if (end - ptr < rdlen) {
 +			return;
 +		}
 +
