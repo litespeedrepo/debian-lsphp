@@ -28,6 +28,16 @@ on:
       distro:
         description: 'distro'
         required: true
+        default: 'jammy'
+        type: choice
+        options:
+          - '"jammy"'
+          - '"focal"'
+          - '"bionic"'
+          - '"bookworm"'
+          - '"bullseye"'
+          - '"buster"'
+          - '"jammy","focal","bionic","bookworm","bullseye","buster"'
 
 
 jobs:
