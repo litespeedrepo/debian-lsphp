@@ -2,11 +2,18 @@
 # The LSPHP
 [<img src="https://img.shields.io/badge/slack-LiteSpeed-blue.svg?logo=slack">](litespeedtech.com/slack)
 
+**Active versions**
 | Architecture | PHP 8.5 | PHP 8.4 | PHP 8.3 | PHP 8.2 | PHP 8.1 |
 |--------------|---------|---------|---------|---------|---------|
 | **AMD64** | ![PHP85 AMD64](https://img.shields.io/github/actions/workflow/status/litespeedrepo/debian-lsphp/self-host-amd-build.yml?branch=php85&label=build) | ![PHP84 AMD64](https://img.shields.io/github/actions/workflow/status/litespeedrepo/debian-lsphp/self-host-amd-build.yml?branch=php84&label=build) | ![PHP83 AMD64](https://img.shields.io/github/actions/workflow/status/litespeedrepo/debian-lsphp/self-host-amd-build.yml?branch=php83&label=build) | ![PHP82 AMD64](https://img.shields.io/github/actions/workflow/status/litespeedrepo/debian-lsphp/self-host-amd-build.yml?branch=php82&label=build) | ![PHP81 AMD64](https://img.shields.io/github/actions/workflow/status/litespeedrepo/debian-lsphp/self-host-amd-build.yml?branch=php81&label=build) |
 | **ARM64** | ![PHP85 ARM64](https://img.shields.io/github/actions/workflow/status/litespeedrepo/debian-lsphp/self-host-arm-build.yml?branch=php85&label=build) | ![PHP84 ARM64](https://img.shields.io/github/actions/workflow/status/litespeedrepo/debian-lsphp/self-host-arm-build.yml?branch=php84&label=build) | ![PHP83 ARM64](https://img.shields.io/github/actions/workflow/status/litespeedrepo/debian-lsphp/self-host-arm-build.yml?branch=php83&label=build) | ![PHP82 ARM64](https://img.shields.io/github/actions/workflow/status/litespeedrepo/debian-lsphp/self-host-arm-build.yml?branch=php82&label=build) | ![PHP81 ARM64](https://img.shields.io/github/actions/workflow/status/litespeedrepo/debian-lsphp/self-host-arm-build.yml?branch=php81&label=build) |
 
+
+**End of Life versions**
+| Architecture | PHP 8.0 | PHP 7.4 | 
+|--------------|---------|---------|
+| **AMD64** | ![PHP80 AMD64](https://img.shields.io/github/actions/workflow/status/litespeedrepo/debian-lsphp/self-host-amd-build.yml?branch=php80&label=build) | ![PHP74 AMD64](https://img.shields.io/github/actions/workflow/status/litespeedrepo/debian-lsphp/self-host-amd-build.yml?branch=php74&label=build) | 
+| **ARM64** | ![PHP80 ARM64](https://img.shields.io/github/actions/workflow/status/litespeedrepo/debian-lsphp/self-host-arm-build.yml?branch=php80&label=build) | ![PHP74 ARM64](https://img.shields.io/github/actions/workflow/status/litespeedrepo/debian-lsphp/self-host-arm-build.yml?branch=php74&label=build) | 
 
 
 LiteSpeed PHP is an optimized compilation of PHP built to work with LiteSpeed products through the LiteSpeed SAPI.
