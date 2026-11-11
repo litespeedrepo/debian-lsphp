@@ -62,7 +62,6 @@ Build-Depends: autoconf (>= 2.59),
                netcat-openbsd,
                php-common,
                re2c,
-               
                systemtap-sdt-dev,
                tzdata,
                unixodbc-dev,
