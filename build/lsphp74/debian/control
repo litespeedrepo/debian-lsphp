@@ -16,7 +16,7 @@ Build-Depends: autoconf (>= 2.59),
                libapparmor-dev,
                libapr1-dev,
                libbz2-dev,
-               libargon2-dev | libargon2-0-dev
+               libargon2-dev | libargon2-0-dev,
                libc-client-dev,
                libcurl4-openssl-dev | libcurl-dev,
                libdb-dev,
