@@ -6,7 +6,7 @@ EPACE='        '
 PHP_V=81
 
 PUSH_FLAG='OFF'
-lsapi_version=8.3
+lsapi_version=8.4
 version=""
 revision=""
 
