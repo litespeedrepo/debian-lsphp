@@ -68,7 +68,7 @@ prepare_source(){
         wget $source_url
         tar xzf php-$version.tar.gz
 
-        source_folder_name=php8.5-$version
+        source_folder_name=php8.6-$version
         mv php-$version $source_folder_name
 
         SOURCE_DIR=$BUILD_DIR/$source_folder_name

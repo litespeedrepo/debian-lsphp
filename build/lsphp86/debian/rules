@@ -128,7 +128,7 @@ COMMON_CONFIG := \
 		--disable-debug \
 		--disable-rpath \
 		--disable-static \
-		--with-pic \
+		--enable-pic \
 		--with-layout=GNU \
 		--without-pear \
 		--enable-bcmath \
