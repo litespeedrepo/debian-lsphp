@@ -1,22 +1,22 @@
-Source: lsphp85-memcached
+Source: lsphp86-memcached
 Section: php
 Priority: optional
 Maintainer: litespeed <info@litespeedtech.com>
 Uploaders: litespeed <info@litespeedtech.com>
 Build-Depends: debhelper (>= 9),
-               lsphp85-dev,
-               lsphp85-igbinary,
-               lsphp85-msgpack,
+               lsphp86-dev,
+               lsphp86-igbinary,
+               lsphp86-msgpack,
                libmemcached11,
                libmemcached-dev (>= 1.0.18),
                pkg-config,
                zlib1g-dev
 Standards-Version: 3.9.8
 
-Package: lsphp85-memcached
+Package: lsphp86-memcached
 Architecture: any
-Depends: lsphp85-igbinary,
-         lsphp85-msgpack,
+Depends: lsphp86-igbinary,
+         lsphp86-msgpack,
          ucf,
          ${misc:Depends},
          ${php:Depends},

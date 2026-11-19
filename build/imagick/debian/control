@@ -1,14 +1,14 @@
-Source: lsphp85-imagick
+Source: lsphp86-imagick
 Section: php
 Priority: optional
 Maintainer: litespeed <info@litespeedtech.com>
 Uploaders: litespeed <info@litespeedtech.com>
 Build-Depends: debhelper (>= 9),
                libmagickwand-6.q16-dev | libmagickwand-dev,
-               lsphp85-dev
+               lsphp86-dev
 Standards-Version: 3.9.8
 
-Package: lsphp85-imagick
+Package: lsphp86-imagick
 Architecture: any
 Depends: ${misc:Depends},
          ${php:Depends},

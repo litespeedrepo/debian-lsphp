@@ -23,7 +23,7 @@ index 117727e..b1d4334 100644
  
  #if PHP_VERSION_ID < 70100
 diff --git a/msgpack_pack.c b/msgpack_pack.c
-index 646453a..b9785a8 100644
+index 646453a..b9786a8 100644
 --- a/msgpack_pack.c
 +++ b/msgpack_pack.c
 @@ -280,15 +280,15 @@ static inline void msgpack_serialize_array(smart_str *buf, zval *val, HashTable

@@ -32,17 +32,15 @@ on:
       distro:
         description: 'distro'
         required: true
-        default: 'noble'
+        default: 'resolute'
         type: choice
         options:
           - '"resolute"'
           - '"noble"'
           - '"jammy"'
-          - '"focal"'
           - '"trixie"'
           - '"bookworm"'
-          - '"bullseye"'
-          - '"resolute","noble","jammy","trixie","bookworm","bullseye"'
+          - '"resolute","noble","jammy","trixie","bookworm"'
 
 jobs:
   package:

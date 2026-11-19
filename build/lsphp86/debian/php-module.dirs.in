@@ -1,0 +1,3 @@
+#/usr/local/lsws/lsphp86/etc/php/8.6/mods-available
+/usr/local/lsws/lsphp86/lib/php/@PHP_API@
+#EXTRA#

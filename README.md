@@ -12,9 +12,9 @@ To build a custom package on a local server.
 2. Start container with command, `docker run -d --name packagebuild --user root --cap-add SYS_ADMIN --security-opt seccomp=unconfined --security-opt apparmor=unconfined -it eggcold/debian-build`
 3. Login to the container: `docker exec -it packagebuild bash`
 4. clone the repo or your forked repo, `git clone https://github.com/litespeedrepo/debian-lsphp.git`
-5. Switch branch, e.g. php85: `git checkout php85`
+5. Switch branch, e.g. php86: `git checkout php86`
 6. Run example command to build, e.g. apcu package for bookworm distribution: `./build.sh apcu bookworm amd64`
-7. Result deb will be stored under, e.g. **build/apcu/lsphp85-5.1.24-1/build-result/bookworm/** folder
+7. Result deb will be stored under, e.g. **build/apcu/lsphp86-5.1.24-1/build-result/bookworm/** folder
 
 ## Support, Feedback, and Collaboration
 

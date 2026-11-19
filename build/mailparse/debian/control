@@ -1,14 +1,14 @@
-Source: lsphp85-mailparse
+Source: lsphp86-mailparse
 Section: php
 Priority: optional
 Maintainer: litespeed <info@litespeedtech.com>
 Uploaders: litespeed <info@litespeedtech.com>
 Build-Depends: debhelper (>= 10~),
-               lsphp85-common,
-               lsphp85-dev
+               lsphp86-common,
+               lsphp86-dev
 Standards-Version: 4.5.1
 
-Package: lsphp85-mailparse
+Package: lsphp86-mailparse
 Architecture: any
 Depends: ${misc:Depends},
          ${php:Depends},

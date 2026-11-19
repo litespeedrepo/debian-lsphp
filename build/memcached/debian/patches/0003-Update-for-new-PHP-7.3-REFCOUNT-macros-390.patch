@@ -12,7 +12,7 @@ diff --git a/php_memcached.c b/php_memcached.c
 index 65d11eb..fa9553d 100644
 --- a/php_memcached.c
 +++ b/php_memcached.c
-@@ -1285,7 +1285,7 @@ static PHP_METHOD(Memcached, __construct)
+@@ -1286,7 +1286,7 @@ static PHP_METHOD(Memcached, __construct)
  		le.type = php_memc_list_entry();
  		le.ptr  = intern->memc;
  
