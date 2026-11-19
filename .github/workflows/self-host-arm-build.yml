@@ -43,7 +43,7 @@ on:
           - '"bookworm"'
           - '"bullseye"'
           - '"buster"'
-          - '"resolute","noble","jammy","bionic","trixie","bookworm","bullseye","buster"
+          - '"resolute","noble","jammy","bionic","trixie","bookworm","bullseye","buster"'
           - '"resolute","noble","jammy","trixie","bookworm","bullseye"'
 
 jobs:
