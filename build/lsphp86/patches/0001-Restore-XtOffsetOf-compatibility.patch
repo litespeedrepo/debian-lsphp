@@ -7,8 +7,6 @@ Description: Restore legacy extension API aliases
  Zend/zend_types.h | 6 ++++++
  2 files changed, 9 insertions(+)
 
-diff --git a/Zend/zend_types.h b/Zend/zend_types.h
-index 0000000..0000000 100644
 --- a/Zend/zend_types.h
 +++ b/Zend/zend_types.h
 @@ -19,6 +19,12 @@
@@ -24,11 +22,9 @@ index 0000000..0000000 100644
  #include "zend_portability.h"
  #include "zend_long.h"
  #include "zend_atomic.h"
-diff --git a/Zend/zend_ini.h b/Zend/zend_ini.h
-index 0000000..0000000 100644
 --- a/Zend/zend_ini.h
 +++ b/Zend/zend_ini.h
-@@ -89,6 +89,9 @@
+@@ -89,5 +89,8 @@
  #define zend_ini_bool_literal(name) zend_ini_parse_bool(zend_ini_str((name), sizeof("" name) - 1, false))
  #define zend_ini_long_literal(name) zend_ini_long((name), sizeof("" name) - 1, false)
  #define zend_ini_double_literal(name) zend_ini_double((name), sizeof("" name) - 1, false)
