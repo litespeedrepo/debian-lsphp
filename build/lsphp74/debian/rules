@@ -374,7 +374,8 @@ install: prepare-files-stamp
 	#cp -p debian/tmp/usr/local/lsws/lsphp74/bin/phar7.4.phar debain/tmp/usr/local/lsws/lsphp74/bin/phar
 	cp -p debian/tmp/usr/local/lsws/lsphp74/bin/phpize7.4 debian/tmp/usr/local/lsws/lsphp74/bin/phpize
 	cp -p debian/tmp/usr/local/lsws/lsphp74/bin/php-config7.4 debian/tmp/usr/local/lsws/lsphp74/bin/php-config
-	cp -p debian/debhelper/phpenmod debian/lsphp74-common/$(LSPHP_INST_DIR)/bin/phpdismod
+	#cp -p debian/debhelper/phpenmod debian/lsphp74-common/$(LSPHP_INST_DIR)/bin/phpdismod
+	install -m 755 debian/debhelper/phpenmod debian/lsphp74-common/$(LSPHP_INST_DIR)/bin/phpdismod
 	#install -m 755 debian/tmp/usr/local/lsws/lsphp74/bin/phpize7.4 debian/lsphp74-dev/$(LSPHP_INST_DIR)/bin/phpize
 	#install -m 755 debian/tmp/usr/local/lsws/lsphp74/bin/php-config7.4 debian/lsphp74-dev/$(LSPHP_INST_DIR)/bin/php-config
 	#install -m 755 debian/tmp/usr/local/lsws/lsphp74/bin/php7.4 debian/tmp/usr/local/lsws/lsphp74/bin/php	
