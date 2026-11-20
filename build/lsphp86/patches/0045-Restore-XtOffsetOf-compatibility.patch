@@ -1,0 +1,25 @@
+Description: Restore XtOffsetOf compatibility for out-of-tree extensions
+ XtOffsetOf was used by PHP extensions to calculate the offset of a field.
+ Keep compatibility with extensions using that name while using the standard
+ offsetof implementation. Do not override an existing XtOffsetOf definition.
+---
+ Zend/zend_types.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Zend/zend_types.h b/Zend/zend_types.h
+index 0000000..0000000 100644
+--- a/Zend/zend_types.h
++++ b/Zend/zend_types.h
+@@ -19,6 +19,12 @@
+ #ifndef ZEND_TYPES_H
+ #define ZEND_TYPES_H
+ 
++#include <stddef.h>
++
++#ifndef XtOffsetOf
++# define XtOffsetOf(type, field) offsetof(type, field)
++#endif
++
+ #include "zend_portability.h"
+ #include "zend_long.h"
+ #include "zend_atomic.h"

@@ -33,3 +33,4 @@
 0042-Disable-avx-detection-with-gcc-6.patch
 0043-Disable-garbage-collection-routine.patch
 0044-Add-missing-header-includes.patch
+0045-Restore-XtOffsetOf-compatibility.patch
