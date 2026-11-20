@@ -370,7 +370,8 @@ install: prepare-files-stamp
 	#cp -p debian/tmp/usr/local/lsws/lsphp82/bin/phar8.2.phar debain/tmp/usr/local/lsws/lsphp82/bin/phar
 	cp -p debian/tmp/usr/local/lsws/lsphp82/bin/phpize8.2 debian/tmp/usr/local/lsws/lsphp82/bin/phpize
 	cp -p debian/tmp/usr/local/lsws/lsphp82/bin/php-config8.2 debian/tmp/usr/local/lsws/lsphp82/bin/php-config
-	cp -p debian/debhelper/phpenmod debian/lsphp82-common/$(LSPHP_INST_DIR)/bin/phpdismod
+	#cp -p debian/debhelper/phpenmod debian/lsphp82-common/$(LSPHP_INST_DIR)/bin/phpdismod
+	install -m 755 debian/debhelper/phpenmod debian/lsphp82-common/$(LSPHP_INST_DIR)/bin/phpdismod
 	#install -m 755 debian/tmp/usr/local/lsws/lsphp82/bin/phpize8.2 debian/lsphp82-dev/$(LSPHP_INST_DIR)/bin/phpize
 	#install -m 755 debian/tmp/usr/local/lsws/lsphp82/bin/php-config8.2 debian/lsphp82-dev/$(LSPHP_INST_DIR)/bin/php-config
 	#install -m 755 debian/tmp/usr/local/lsws/lsphp82/bin/php8.2 debian/tmp/usr/local/lsws/lsphp82/bin/php	
