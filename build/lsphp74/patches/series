@@ -1,5 +1,6 @@
 0001-libtool_fixes.patch
-0002-debian_quirks.patch
+# NOTE (lsphp): 0002 dropped - redefines phpbuilddir to lib/php/<API>/build,
+# our debian/php-dev.install + rules expect stock lib/php/build layout
 0003-php-5.4.9-phpinfo.patch
 0004-extension_api.patch
 0005-proc_open.patch
@@ -8,7 +9,8 @@
 0008-Add-support-for-use-of-the-system-timezone-database.patch
 0009-strcmp_null-OnUpdateErrorLog.patch
 0010-qdbm-is-usr_include_qdbm.patch
-0011-session_save_path.patch
+# NOTE (lsphp): 0011 dropped - hardcodes session.save_path to /var/lib/php/sessions,
+# our packaging manages var/lib/lsphp74/sessions with its own sessionclean instead
 0012-php-fpm-man-section-and-cleanup.patch
 0013-fpm-config.patch
 0014-php-fpm-sysconfdir.patch
