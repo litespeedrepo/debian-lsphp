@@ -1496,56 +1496,7 @@ index 7b9772f..d25ecf8 100644
  					zlog(ZLOG_ERROR, "[pool %s] the ping path '%s' must containt only the following characters '[alphanum]/_-.~'", wp->config->name, ping);
  					return -1;
  				}
-diff --git a/sapi/litespeed/lsapi_main.c b/sapi/litespeed/lsapi_main.c
-index d94fdf8..49947be 100644
---- a/sapi/litespeed/lsapi_main.c
-+++ b/sapi/litespeed/lsapi_main.c
-@@ -1739,12 +1739,12 @@ PHP_FUNCTION(litespeed_response_headers)
-             len = p - h->header;
-             if (p && len > 0 && len < LSAPI_RESP_HTTP_HEADER_MAX) {
-                 memmove( headerBuf, h->header, len );
--                while( len > 0 && (isspace( headerBuf[len-1])) ) {
-+                while( len > 0 && (isspace((unsigned char)headerBuf[len - 1])) ) {
-                     --len;
-                 }
-                 headerBuf[len] = 0;
-                 if ( len ) {
--                    while( isspace(*++p));
-+                    while(isspace((unsigned char)*++p));
-                     add_assoc_string_ex(return_value, headerBuf, len, p);
-                 }
-             }
-diff --git a/sapi/litespeed/lsapilib.c b/sapi/litespeed/lsapilib.c
-index 3dbf8bc..60c4c06 100644
---- a/sapi/litespeed/lsapilib.c
-+++ b/sapi/litespeed/lsapilib.c
-@@ -2199,7 +2199,7 @@ static char * GetHeaderVar( LSAPI_Request * pReq, const char * name )
- 
-             while(( pKey < pKeyEnd )&&( *p ))
-             {
--                char ch = toupper( *pKey );
-+                char ch = toupper( (unsigned char)*pKey );
-                 if ((ch != *p )||(( *p == '_' )&&( ch != '-')))
-                     break;
-                 ++p; ++pKey;
-@@ -2383,7 +2383,7 @@ int LSAPI_ForeachHeader_r( LSAPI_Request * pReq,
-                 if ( ch == '-' )
-                     *p++ = '_';
-                 else
--                    *p++ = toupper( ch );
-+                    *p++ = toupper( (unsigned char)ch );
-             }
-             *p = 0;
-             keyLen += 5;
-@@ -2628,7 +2628,7 @@ int LSAPI_ParseSockAddr( const char * pBind, struct sockaddr * pAddr )
-     if ( !pBind )
-         return -1;
- 
--    while( isspace( *pBind ) )
-+    while(isspace( (unsigned char)*pBind ) )
-         ++pBind;
- 
-     strncpy(achAddr, pBind, 255);
+# NOTE (lsphp): sapi/litespeed/lsapi_main.c + lsapilib.c hunks dropped - (unsigned char) ctype casts already in LSAPI 8.4 sources
 diff --git a/sapi/phpdbg/phpdbg_cmd.c b/sapi/phpdbg/phpdbg_cmd.c
 index 4845acc..8c79707 100644
 --- a/sapi/phpdbg/phpdbg_cmd.c
