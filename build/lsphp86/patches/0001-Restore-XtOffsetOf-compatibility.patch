@@ -1,11 +1,50 @@
 Description: Restore legacy extension API aliases
+ Restore legacy extension API aliases and php_verror call compatibility.
  Restore XtOffsetOf and INI_STR aliases used by out-of-tree extensions.
  Map them to the standard offsetof and PHP 8.6 zend_ini_string_literal APIs,
- without overriding definitions supplied by other headers.
+ without overriding definitions supplied by other headers. Also accept both
+ the legacy five-argument and current four-argument php_verror() call forms.
 ---
- Zend/zend_ini.h   | 3 +++
- Zend/zend_types.h | 6 ++++++
- 2 files changed, 9 insertions(+)
+ main/main.c       |  1 +
+ main/php.h        | 15 +++++++++++++++
+ Zend/zend_ini.h   |  3 +++
+ Zend/zend_types.h |  6 ++++++
+ 4 files changed, 25 insertions(+)
+
+--- a/main/main.c
++++ b/main/main.c
+@@ -15,6 +15,7 @@
+ */
+ /* {{{ includes */
+ #define ZEND_INCLUDE_FULL_WINDOWS_HEADERS
++#define PHP_DISABLE_LEGACY_VERROR
+ 
+ #include "php.h"
+ #include <stdio.h>
+
+--- a/main/php.h
++++ b/main/php.h
+@@ -301,6 +301,21 @@ static inline ZEND_ATTRIBUTE_DEPRECATED void php_std_error_handling(void) {}
+ PHPAPI ZEND_COLD void php_verror(const char *docref, int type, const char *format, va_list args) PHP_ATTRIBUTE_FORMAT(printf, 3, 0);
+ 
++/*
++ * Accept both the legacy five-argument and current four-argument forms.
++ * The legacy params argument was removed from the PHP 8.6 API.
++ */
++#ifndef PHP_DISABLE_LEGACY_VERROR
++# define PHP_VERROR_SELECT(_1, _2, _3, _4, _5, NAME, ...) NAME
++# define PHP_VERROR_LEGACY(docref, params, type, format, args) \
++	(php_verror)((docref), (type), (format), (args))
++# define PHP_VERROR_CURRENT(docref, type, format, args) \
++	(php_verror)((docref), (type), (format), (args))
++# define php_verror(...) \
++	PHP_VERROR_SELECT(__VA_ARGS__, PHP_VERROR_LEGACY, \
++		PHP_VERROR_CURRENT, 0)(__VA_ARGS__)
++#endif
++
+ /* PHPAPI void php_error(int type, const char *format, ...); */
+ 
+ PHPAPI ZEND_COLD void php_error_docref(const char *docref, int type, const char *format, ...)
 
 --- a/Zend/zend_types.h
 +++ b/Zend/zend_types.h
