@@ -24,9 +24,9 @@ Description: Restore legacy extension API aliases
 
 --- a/main/php.h
 +++ b/main/php.h
-@@ -301,6 +301,21 @@ static inline ZEND_ATTRIBUTE_DEPRECATED void php_std_error_handling(void) {}
+@@ -301,5 +301,20 @@ static inline ZEND_ATTRIBUTE_DEPRECATED void php_std_error_handling(void) {}
  PHPAPI ZEND_COLD void php_verror(const char *docref, int type, const char *format, va_list args) PHP_ATTRIBUTE_FORMAT(printf, 3, 0);
- 
+
 +/*
 + * Accept both the legacy five-argument and current four-argument forms.
 + * The legacy params argument was removed from the PHP 8.6 API.
