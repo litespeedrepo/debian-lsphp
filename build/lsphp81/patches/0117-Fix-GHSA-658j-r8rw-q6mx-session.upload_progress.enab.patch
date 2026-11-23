@@ -1,0 +1,34 @@
+From: Arnaud Le Blanc <arnaud.lb@gmail.com>
+Date: Mon, 9 Nov 2026 12:02:32 +0100
+Subject: Fix GHSA-658j-r8rw-q6mx: session.upload_progress.enabled is off by
+ default
+
+Default change only: upload progress is already disabled in EOL versions,
+so the runtime check of the session INI settings is not backported.
+
+(cherry picked from commit 3f70f66611583bca4ec18385f7f407e2808fa61f)
+---
+ ext/session/session.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/ext/session/session.c b/ext/session/session.c
+index d947fb3..c17ef86 100644
+--- a/ext/session/session.c
++++ b/ext/session/session.c
+@@ -817,7 +817,7 @@ PHP_INI_BEGIN()
+ 
+ 	/* Upload progress */
+ 	STD_PHP_INI_BOOLEAN("session.upload_progress.enabled",
+-	                                                "1",     ZEND_INI_PERDIR, OnUpdateBool,        rfc1867_enabled, php_ps_globals, ps_globals)
++	                                                "0",     ZEND_INI_PERDIR, OnUpdateBool,        rfc1867_enabled, php_ps_globals, ps_globals)
+ 	STD_PHP_INI_BOOLEAN("session.upload_progress.cleanup",
+ 	                                                "1",     ZEND_INI_PERDIR, OnUpdateBool,        rfc1867_cleanup, php_ps_globals, ps_globals)
+ 	STD_PHP_INI_ENTRY("session.upload_progress.prefix",
+@@ -2767,6 +2767,7 @@ static PHP_GINIT_FUNCTION(ps) /* {{{ */
+ 	ps_globals->mod = NULL;
+ 	ps_globals->serializer = NULL;
+ 	ps_globals->mod_data = NULL;
++	ps_globals->rfc1867_enabled = false;
+ 	ps_globals->session_status = php_session_none;
+ 	ps_globals->default_mod = NULL;
+ 	ps_globals->mod_user_implemented = 0;

@@ -28,7 +28,7 @@ index 962831b..e7dbdfb 100644
  # ifndef YY_CAST
  #  ifdef __cplusplus
 diff --git a/configure.ac b/configure.ac
-index 7730903..d041125 100644
+index 5a87ab8..c65b9df 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -80,6 +80,8 @@ AC_DEFUN([PHP_EXT_DIR],[$config_m4_dir])dnl
