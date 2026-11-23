@@ -33,9 +33,9 @@
 0031-Really-expand-libdir-datadir-into-EXPANDED_LIBDIR-DA.patch
 0032-Fix-ext-date-lib-parse_tz-PATH_MAX-HURD-FTBFS.patch
 0033-Add-patch-to-install-php7-module-directly-to-APXS_LI.patch
-0034-libtool2.2.patch
-0035-Include-all-libtool-files-from-phpize.m4.patch
-0036-In-phpize-also-copy-config.guess-config.sub-ltmain.s.patch
+# NOTE (lsphp): 0034/0035/0036 dropped - phpize copies libtool/pkg m4 files from
+# $prefix/share/aclocal, which our -dev package does not ship; upstream phpize
+# uses the libtool.m4/pkg.m4 we already install in lib/php/build
 0037-Don-t-use-hrtimers-on-GNU-Hurd.patch
 0038-Show-packaging-credits.patch
 0039-Allow-printing-credits-buffer-larger-than-4k.patch
