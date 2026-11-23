@@ -5,11 +5,12 @@ Description: Restore legacy extension API aliases
  without overriding definitions supplied by other headers. Also accept both
  the legacy five-argument and current four-argument php_verror() call forms.
 ---
- main/main.c       |  1 +
- main/php.h        | 15 +++++++++++++++
- Zend/zend_ini.h   |  3 +++
- Zend/zend_types.h |  6 ++++++
- 4 files changed, 25 insertions(+)
+ main/main.c               |  1 +
+ main/php.h                | 15 +++++++++++++++
+ Zend/zend_ini.h           |  3 +++
+ Zend/zend_portability.h   |  4 ++++
+ Zend/zend_types.h         |  6 ++++++
+ 5 files changed, 29 insertions(+)
 
 --- a/main/main.c
 +++ b/main/main.c
@@ -45,6 +46,19 @@ Description: Restore legacy extension API aliases
  /* PHPAPI void php_error(int type, const char *format, ...); */
  
  PHPAPI ZEND_COLD void php_error_docref(const char *docref, int type, const char *format, ...)
+
+--- a/Zend/zend_portability.h
++++ b/Zend/zend_portability.h
+@@ -126,5 +126,9 @@
+ #if ZEND_DEBUG
+ # define ZEND_UNREACHABLE() do {ZEND_ASSERT(0); _ZEND_UNREACHABLE();} while (0)
+ #else
+ # define ZEND_UNREACHABLE() _ZEND_UNREACHABLE()
+ #endif
++
++#ifndef EMPTY_SWITCH_DEFAULT_CASE
++# define EMPTY_SWITCH_DEFAULT_CASE() default: ZEND_UNREACHABLE();
++#endif
 
 --- a/Zend/zend_types.h
 +++ b/Zend/zend_types.h
