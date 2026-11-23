@@ -8,9 +8,9 @@ Description: Restore legacy extension API aliases
  main/main.c               |  1 +
  main/php.h                | 15 +++++++++++++++
  Zend/zend_ini.h           |  3 +++
- Zend/zend_portability.h   |  4 ++++
+ Zend/zend_portability.h   |  5 +++++
  Zend/zend_types.h         |  6 ++++++
- 5 files changed, 29 insertions(+)
+ 5 files changed, 30 insertions(+)
 
 --- a/main/main.c
 +++ b/main/main.c
@@ -49,7 +49,7 @@ Description: Restore legacy extension API aliases
 
 --- a/Zend/zend_portability.h
 +++ b/Zend/zend_portability.h
-@@ -126,5 +126,9 @@
+@@ -126,7 +126,12 @@
  #if ZEND_DEBUG
  # define ZEND_UNREACHABLE() do {ZEND_ASSERT(0); _ZEND_UNREACHABLE();} while (0)
  #else
@@ -59,6 +59,8 @@ Description: Restore legacy extension API aliases
 +#ifndef EMPTY_SWITCH_DEFAULT_CASE
 +# define EMPTY_SWITCH_DEFAULT_CASE() default: ZEND_UNREACHABLE();
 +#endif
++
+ /* pseudo fallthrough keyword; */
 
 --- a/Zend/zend_types.h
 +++ b/Zend/zend_types.h
