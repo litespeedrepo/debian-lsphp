@@ -49,12 +49,7 @@ Description: Restore legacy extension API aliases
 
 --- a/Zend/zend_portability.h
 +++ b/Zend/zend_portability.h
-@@ -126,5 +126,10 @@
- #if ZEND_DEBUG
- # define ZEND_UNREACHABLE() do {ZEND_ASSERT(0); _ZEND_UNREACHABLE();} while (0)
- #else
- # define ZEND_UNREACHABLE() _ZEND_UNREACHABLE()
- #endif
+@@ -130,0 +131,5 @@
 +
 +#ifndef EMPTY_SWITCH_DEFAULT_CASE
 +# define EMPTY_SWITCH_DEFAULT_CASE() default: ZEND_UNREACHABLE();
