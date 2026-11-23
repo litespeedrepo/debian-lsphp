@@ -93,27 +93,32 @@ if [ "$dists" = "all" ]; then
 fi
 
 if [ -z "$revision" ]; then
-    TMP_DIST=$(echo "$dists" | awk '{ print $1 }')
-
-    if ! echo "$product" | grep '-' >/dev/null; then
-        revision=$(curl -isk "https://${prod_server}/debian/pool/main/${TMP_DIST}/" \
-            | grep "${product}_${version}" \
-            | awk -F '-' '{print $3}' \
-            | awk -F '+' '{print $1}' \
-            | tail -1)
-    else
-        revision=$(curl -isk "https://${prod_server}/debian/pool/main/${TMP_DIST}/" \
-            | grep "${product}_${version}" \
-            | awk -F '-' '{print $4}' \
-            | awk -F '+' '{print $1}' \
-            | tail -1)
-    fi
-
-    if [[ "$revision" =~ ^-?[0-9]+$ ]]; then
-        revision=$((revision + 1))
-    else
-        echo "$revision is not a number, set value to 1"
+    echo "No revision given, checking repo for latest ${product}_${version} release"
+    esc_version=${version//./\.}
+    esc_version=${esc_version//+/\\+}
+    latest=0
+    for dist in $dists; do
+        repo_url="https://${prod_server}/debian/pool/main/${dist}/"
+        repo_list=$(curl -skf --max-time 30 "${repo_url}" 2>/dev/null)
+        if [ $? != 0 ] || [ -z "${repo_list}" ]; then
+            echo "ERROR: could not fetch ${repo_url}, pass --revision N explicitly."
+            exit 1
+        fi
+        if ! echo "${repo_list}" | grep -q "\.deb"; then
+            echo "ERROR: ${repo_url} does not look like a package listing, pass --revision N explicitly."
+            exit 1
+        fi
+        found=$(echo "${repo_list}" | grep -oE "[\"/]${product}_${esc_version}-[0-9]+" | grep -oE "[0-9]+$" | sort -nr | head -n1)
+        if [[ "${found}" =~ ^[0-9]+$ ]] && [ "${found}" -gt "${latest}" ]; then
+            latest=${found}
+        fi
+    done
+    if [ "${latest}" -eq 0 ]; then
+        echo "No prior release of ${product}_${version} found, starting at revision 1"
         revision=1
+    else
+        revision=$((10#${latest}+1))
+        echo "Latest published release is ${latest}, building revision ${revision}"
     fi
 fi
 
