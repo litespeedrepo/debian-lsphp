@@ -1,0 +1,69 @@
+From: =?utf-8?b?T25kxZllaiBTdXLDvQ==?= <ondrej@sury.org>
+Date: Fri, 20 Nov 2026 14:27:20 +0100
+Subject: fix dtd_named_like_root tests for 8.0 and older (use SKIPIF instead
+ of --EXTENSIONS--)
+
+---
+ ext/soap/tests/dtd_named_like_root_request.phpt       | 4 ++--
+ ext/soap/tests/dtd_named_like_root_request_input.phpt | 4 ++--
+ ext/soap/tests/dtd_named_like_root_schema.phpt        | 4 ++--
+ ext/soap/tests/dtd_named_like_root_wsdl.phpt          | 4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/ext/soap/tests/dtd_named_like_root_request.phpt b/ext/soap/tests/dtd_named_like_root_request.phpt
+index 9078c02..4de437e 100644
+--- a/ext/soap/tests/dtd_named_like_root_request.phpt
++++ b/ext/soap/tests/dtd_named_like_root_request.phpt
+@@ -1,7 +1,7 @@
+ --TEST--
+ SOAP: DOCTYPE named like the envelope is not taken for it when rejecting a request
+---EXTENSIONS--
+-soap
++--SKIPIF--
++<?php require_once('skipif.inc'); ?>
+ --FILE--
+ <?php
+ function test($x) {
+diff --git a/ext/soap/tests/dtd_named_like_root_request_input.phpt b/ext/soap/tests/dtd_named_like_root_request_input.phpt
+index 579f5cf..9bcf2bc 100644
+--- a/ext/soap/tests/dtd_named_like_root_request_input.phpt
++++ b/ext/soap/tests/dtd_named_like_root_request_input.phpt
+@@ -8,8 +8,8 @@ SOAP: DOCTYPE named like the envelope is not taken for it when rejecting a poste
+     <ns1:test><param0>x</param0></ns1:test>
+   </SOAP-ENV:Body>
+ </SOAP-ENV:Envelope>
+---EXTENSIONS--
+-soap
++--SKIPIF--
++<?php require_once('skipif.inc'); ?>
+ --FILE--
+ <?php
+ function test($x) {
+diff --git a/ext/soap/tests/dtd_named_like_root_schema.phpt b/ext/soap/tests/dtd_named_like_root_schema.phpt
+index 930f3aa..152ea72 100644
+--- a/ext/soap/tests/dtd_named_like_root_schema.phpt
++++ b/ext/soap/tests/dtd_named_like_root_schema.phpt
+@@ -1,7 +1,7 @@
+ --TEST--
+ SOAP: DOCTYPE named like the schema root element is not taken for it
+---EXTENSIONS--
+-soap
++--SKIPIF--
++<?php require_once('skipif.inc'); ?>
+ --INI--
+ soap.wsdl_cache_enabled=0
+ --FILE--
+diff --git a/ext/soap/tests/dtd_named_like_root_wsdl.phpt b/ext/soap/tests/dtd_named_like_root_wsdl.phpt
+index 61a57a6..dd2fc96 100644
+--- a/ext/soap/tests/dtd_named_like_root_wsdl.phpt
++++ b/ext/soap/tests/dtd_named_like_root_wsdl.phpt
+@@ -1,7 +1,7 @@
+ --TEST--
+ SOAP: DOCTYPE named like the WSDL root element is not taken for it
+---EXTENSIONS--
+-soap
++--SKIPIF--
++<?php require_once('skipif.inc'); ?>
+ --INI--
+ soap.wsdl_cache_enabled=0
+ --FILE--
