@@ -39,9 +39,9 @@
 0037-Fix-ext-date-lib-parse_tz-PATH_MAX-HURD-FTBFS.patch
 0038-remove-deprecated-call-and-deprecate-function-to-be-.patch
 0039-Use-libenchant-2-when-available.patch
-0040-libtool2.2.patch
-0041-Include-all-libtool-files-from-phpize.m4.patch
-0042-In-phpize-also-copy-config.guess-config.sub-ltmain.s.patch
+# NOTE (lsphp): 0040/0041/0042 dropped - phpize copies libtool/pkg m4 files from
+# $prefix/share/aclocal, which our -dev package does not ship; upstream phpize
+# uses the libtool.m4/pkg.m4 we already install in lib/php/build
 0043-Don-t-use-hrtimers-on-GNU-Hurd.patch
 0044-Show-packaging-credits.patch
 0045-Allow-printing-credits-buffer-larger-than-4k.patch
