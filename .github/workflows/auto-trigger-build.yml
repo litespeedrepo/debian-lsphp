@@ -98,6 +98,22 @@ jobs:
               -f package="\"$PKG\"" \
               -f distro="$DISTROS" \
               || echo "Failed to trigger $PKG"
+
+            if [ "$PKG" = "lsphp" ]; then
+              echo "Triggering additional amd build for lsphp on focal"
+              gh workflow run self-host-amd-build.yml \
+                --ref ${{ github.ref_name }} \
+                -f package='"lsphp"' \
+                -f distro='"focal"' \
+                || echo "Failed to trigger lsphp on focal (amd64)"
+
+              echo "Triggering additional amd build for lsphp on buster"
+              gh workflow run self-host-amd-build.yml \
+                --ref ${{ github.ref_name }} \
+                -f package='"lsphp"' \
+                -f distro='"buster"' \
+                || echo "Failed to trigger lsphp on buster (amd64)"
+            fi
           done
 
       - name: Trigger ARM64 builds for all changed packages
@@ -120,4 +136,20 @@ jobs:
               -f package="\"$PKG\"" \
               -f distro="$DISTROS" \
               || echo "Failed to trigger $PKG"
+
+            if [ "$PKG" = "lsphp" ]; then
+              echo "Triggering additional arm build for lsphp on focal"
+              gh workflow run self-host-arm-build.yml \
+                --ref ${{ github.ref_name }} \
+                -f package='"lsphp"' \
+                -f distro='"focal"' \
+                || echo "Failed to trigger lsphp on focal (arm64)"
+
+              echo "Triggering additional arm build for lsphp on buster"
+              gh workflow run self-host-arm-build.yml \
+                --ref ${{ github.ref_name }} \
+                -f package='"lsphp"' \
+                -f distro='"buster"' \
+                || echo "Failed to trigger lsphp on buster (arm64)"
+            fi
           done
